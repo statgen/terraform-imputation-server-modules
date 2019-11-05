@@ -42,6 +42,47 @@ resource "aws_iam_group_policy_attachment" "full_access" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# CREATE ROLE AND INSTANCE PROFILE FOR BASTION HOST
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_iam_role" "bastion_host" {
+  name               = "BastionHostRole"
+  description        = "Delegate permissions for Bastion Host"
+  assume_role_policy = data.aws_iam_policy_document.allow_ec2_access.json
+}
+
+resource "aws_iam_instance_profile" "bastion_host" {
+  name = "BastionHostProfile"
+  role = aws_iam_role.bastion_host.name
+}
+
+## Attach Policy for Bastion Host
+resource "aws_iam_role_policy_attachment" "cloudwatch_agent_server" {
+  role       = aws_iam_role.bastion_host.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_instance_connect" {
+  role       = aws_iam_role.bastion_host.name
+  policy_arn = "arn:aws:iam::aws:policy/EC2InstanceConnect"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE ROLE FOR LAMBDA EDGE FUNCTION AND ATTACH POLICY
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_iam_role" "lambda_edge" {
+  name = "LambdaEdgeRole"
+  description = "Delegate permissions for Lambda@Edge functions"
+  assume_role_policy = data.aws_iam_policy_document.allow_lambda_access.json
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basics" {
+  role       = aws_iam_role.lambda_edge.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # CREATE IAM POLICY
 # ---------------------------------------------------------------------------------------------------------------------
 

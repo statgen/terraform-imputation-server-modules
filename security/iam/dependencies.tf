@@ -1,3 +1,6 @@
+# ---------------------------------------------------------------------------------------------------------------------
+# FORCE-MFA POLICY DOCUMENT
+# ---------------------------------------------------------------------------------------------------------------------
 data "aws_iam_policy_document" "force_mfa" {
   statement {
     sid    = "AllowListActions"
@@ -109,5 +112,39 @@ data "aws_iam_policy_document" "force_mfa" {
       variable = "aws:MultiFactorAuthPresent"
       values   = ["false"]
     }
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# BASTION HOST POLICY DOCUMENT
+# ---------------------------------------------------------------------------------------------------------------------
+
+data "aws_iam_policy_document" "allow_ec2_access" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# LAMBDA @ EDGE POLICY DOCUMENT
+# ---------------------------------------------------------------------------------------------------------------------
+
+data "aws_iam_policy_document" "allow_lambda_access" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["edgelambda.amazonaws.com", "lambda.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
   }
 }
