@@ -24,20 +24,20 @@ variable "db_password" {
 
 variable "database_subnets" {
   description = "A list of subnets for the RDS instance"
-  type = list(string)
-  default = null
+  type        = list(string)
+  default     = null
 }
 
 variable "database_sg_id" {
   description = "The ID of the database security group"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "emr_master_sg_id" {
   description = "The ID of the EMR master security group"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "mysql_engine_version" {

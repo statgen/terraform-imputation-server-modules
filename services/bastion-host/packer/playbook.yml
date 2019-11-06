@@ -1,0 +1,9 @@
+- name: Harden Server
+  hosts: all
+  become: yes
+  tasks:
+  - include_role:
+      #  Using https://github.com/florianutz/Ubuntu1804-CIS
+      name: Ubuntu1804-CIS
+    vars:
+      ubuntu1804cis_time_synchronization: chrony

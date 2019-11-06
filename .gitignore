@@ -1,0 +1,6 @@
+## System Files
+.DS_Store
+.envrc
+
+## Artifacts
+services/bastion-host/packer/Ubuntu1804-CIS
