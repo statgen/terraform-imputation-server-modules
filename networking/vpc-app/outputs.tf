@@ -283,3 +283,83 @@ output "emr_master_sg_vpc_id" {
   description = "The VPC ID of the EMR master security group"
   value       = aws_security_group.emr_master.vpc_id
 }
+
+output "emr_slave_sg_arn" {
+  description = "The ARN of the EMR slave security group"
+  value       = aws_security_group.emr_slave.arn
+}
+
+output "emr_slave_sg_description" {
+  description = "The description of the EMR slave security group"
+  value       = aws_security_group.emr_slave.description
+}
+
+output "emr_slave_sg_egress" {
+  description = "The egress rules for the EMR slave security group"
+  value       = aws_security_group.emr_slave.egress
+}
+
+output "emr_slave_sg_ingress" {
+  description = "The ingress rules for the EMR slave security group"
+  value       = aws_security_group.emr_slave.ingress
+}
+
+output "emr_slave_sg_id" {
+  description = "The ID of the EMR slave security group"
+  value       = aws_security_group.emr_slave.id
+}
+
+output "emr_slave_sg_name" {
+  description = "The name of the EMR slave security group"
+  value       = aws_security_group.emr_slave.name
+}
+
+output "emr_slave_sg_owner_id" {
+  description = "The owner ID of the EMR slave security group"
+  value       = aws_security_group.emr_slave.owner_id
+}
+
+output "emr_slave_sg_vpc_id" {
+  description = "The VPC ID of the EMR slave security group"
+  value       = aws_security_group.emr_slave.vpc_id
+}
+
+output "emr_service_sg_arn" {
+  description = "The ARN of the EMR service security group"
+  value       = aws_security_group.emr_service.arn
+}
+
+output "emr_service_sg_description" {
+  description = "The description of the EMR service security group"
+  value       = aws_security_group.emr_service.description
+}
+
+output "emr_service_sg_egress" {
+  description = "The egress rules for the EMR service security group"
+  value       = aws_security_group.emr_service.egress
+}
+
+output "emr_service_sg_ingress" {
+  description = "The ingress rules for the EMR service security group"
+  value       = aws_security_group.emr_service.ingress
+}
+
+output "emr_service_sg_id" {
+  description = "The ID of the EMR service security group"
+  value       = aws_security_group.emr_service.id
+}
+
+output "emr_service_sg_name" {
+  description = "The name of the EMR service security group"
+  value       = aws_security_group.emr_service.name
+}
+
+output "emr_service_sg_owner_id" {
+  description = "The owner ID of the EMR service security group"
+  value       = aws_security_group.emr_service.owner_id
+}
+
+output "emr_service_sg_vpc_id" {
+  description = "The VPC ID of the EMR service security group"
+  value       = aws_security_group.emr_service.vpc_id
+}

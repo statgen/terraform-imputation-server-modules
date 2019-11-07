@@ -204,3 +204,25 @@ resource "aws_security_group" "emr_master" {
     var.tags
   )}"
 }
+
+resource "aws_security_group" "emr_slave" {
+  name        = "${var.name_prefix}-emr-slave"
+  description = "Security group for the EMR slave node(s)"
+  vpc_id      = module.vpc.vpc_id
+
+  tags = "${merge(
+    "${map("Name", "${var.name_prefix}-emr-slave")}",
+    var.tags
+  )}"
+}
+
+resource "aws_security_group" "emr_service" {
+  name        = "${var.name_prefix}-emr-service"
+  description = "Security group for the EMR service access rules"
+  vpc_id      = module.vpc.vpc_id
+
+  tags = "${merge(
+    "${map("Name", "${var.name_prefix}-emr-service")}",
+    var.tags
+  )}"
+}
