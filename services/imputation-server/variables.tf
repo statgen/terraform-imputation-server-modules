@@ -72,6 +72,14 @@ variable "lb_sg_id" {
 
 variable "emr_slave_sg_id" {
   description = "The security group ID of the EMR slave nodes"
+  type        = string
+  default     = null
+}
+
+variable "emr_release_label" {
+  description = "The EMR release version to use"
+  type        = string
+  default     = "null"
 }
 
 variable "bootstrap_action" {
