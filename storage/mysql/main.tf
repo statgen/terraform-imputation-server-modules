@@ -59,19 +59,3 @@ module "rds" {
 
   tags = var.tags
 }
-
-# ----------------------------------------------------------------------------------------------------------------------
-# CREATE SECURITY GROUP RULES
-# ----------------------------------------------------------------------------------------------------------------------
-
-resource "aws_security_group_rule" "mysql_ingress" {
-  type                     = "ingress"
-  from_port                = 3306
-  to_port                  = 3306
-  protocol                 = "tcp"
-  source_security_group_id = var.emr_master_sg_id
-
-  description = "Allow ingress mysql traffic on port 3306 from EMR master security group"
-
-  security_group_id = var.database_sg_id
-}

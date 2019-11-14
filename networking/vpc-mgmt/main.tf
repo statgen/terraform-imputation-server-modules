@@ -62,19 +62,3 @@ resource "aws_flow_log" "vpc_flow_log" {
 
   vpc_id = module.vpc.vpc_id
 }
-
-# ----------------------------------------------------------------------------------------------------------------------
-# CREATE SECURITY GROUPS
-# ----------------------------------------------------------------------------------------------------------------------
-
-locals {
-  tags = "${map("Name", "${var.name_prefix}-bastion-host")}"
-}
-
-resource "aws_security_group" "bastion_host" {
-  name        = "${var.name_prefix}-bastion-host"
-  description = "Security group for bastion host"
-  vpc_id      = module.vpc.vpc_id
-
-  tags = "${merge(local.tags, var.tags)}"
-}

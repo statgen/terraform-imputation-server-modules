@@ -69,32 +69,6 @@ module "ec2_instance" {
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
-# CREATE SECURITY GROUP RULES
-# ----------------------------------------------------------------------------------------------------------------------
-
-resource "aws_security_group_rule" "ssh_ingress" {
-  type        = "ingress"
-  from_port   = 22
-  to_port     = 22
-  protocol    = "tcp"
-  cidr_blocks = var.allowed_cidr_ranges
-
-  description = "Allow ingress SSH to bastion host from CIDR range"
-
-  security_group_id = var.bastion_host_sg_id
-}
-
-resource "aws_security_group_rule" "all_egress" {
-  type        = "egress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
-
-  security_group_id = var.bastion_host_sg_id
-}
-
-# ----------------------------------------------------------------------------------------------------------------------
 # CREATE ROUTE53 RECORD
 # ----------------------------------------------------------------------------------------------------------------------
 

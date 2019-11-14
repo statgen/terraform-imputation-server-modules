@@ -16,32 +16,32 @@ variable "name_prefix" {
   default     = null
 }
 
-variable "domain" {
-  description = "The FQDN of the domain to which the cerficate is attached"
+variable "sub_domain" {
+  description = "TLD or subdomain used in cloudfront and route53 setup"
   type        = string
   default     = null
 }
 
-variable "lb_security_group" {
-  description = "security group for ELB"
+variable "lb_dns_name" {
+  description = "The DNS name of the loadbalancer to be used for the cloufront origin"
   type        = string
   default     = null
 }
 
-variable "lb_subnets" {
-  description = "The subnet where the ELB will be deployed"
-  type        = list(string)
-  default     = null
-}
-
-variable "master_node_id" {
-  description = "EMR master node ID"
+variable "log_bucket" {
+  description = "S3 bucket to be used for cloudfront logs"
   type        = string
   default     = null
 }
 
-variable "vpc_id" {
-  description = "The ID of the VPC in which the cluster is deployed"
+variable "lambda_edge_role_arn" {
+  description = "The IAM role to be used for Lambda @ Edge permissions"
+  type        = string
+  default     = null
+}
+
+variable "route53_zone_id" {
+  description = "The route53 zone ID of the zone for the DNS record to be created in"
   type        = string
   default     = null
 }

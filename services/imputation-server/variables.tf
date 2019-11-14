@@ -52,30 +52,6 @@ variable "vpc_id" {
   default     = null
 }
 
-variable "bastion_host_sg_id" {
-  description = "The security group ID of the bastion host"
-  type        = string
-  default     = null
-}
-
-variable "emr_master_sg_id" {
-  description = "The security group ID of the EMR master node"
-  type        = string
-  default     = null
-}
-
-variable "lb_sg_id" {
-  description = "The secuirty group ID of the load balancer"
-  type        = string
-  default     = null
-}
-
-variable "emr_slave_sg_id" {
-  description = "The security group ID of the EMR slave nodes"
-  type        = string
-  default     = null
-}
-
 variable "emr_release_label" {
   description = "The EMR release version to use"
   type        = string
