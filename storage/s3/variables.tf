@@ -78,8 +78,8 @@ variable "restrict_public_buckets" {
 
 variable "versioning_enabled" {
   description = "Whether AWS S3 should have versioning enabled on log buckets"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "tags" {

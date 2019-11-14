@@ -20,7 +20,7 @@ output "log_bucket_arn" {
 
 output "log_bucket_domain_name" {
   description = "The domain name of the S3 bucket used for logs"
-  value = aws_s3_bucket.logs.bucket_domain_name
+  value       = aws_s3_bucket.logs.bucket_domain_name
 }
 
 output "access_log_bucket_id" {

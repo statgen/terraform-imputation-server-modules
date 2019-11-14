@@ -72,8 +72,8 @@ resource "aws_iam_role_policy_attachment" "ec2_instance_connect" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_role" "lambda_edge" {
-  name = "LambdaEdgeRole"
-  description = "Delegate permissions for Lambda@Edge functions"
+  name               = "LambdaEdgeRole"
+  description        = "Delegate permissions for Lambda@Edge functions"
   assume_role_policy = data.aws_iam_policy_document.allow_lambda_access.json
 }
 
