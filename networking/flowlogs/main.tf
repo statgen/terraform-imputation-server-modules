@@ -23,29 +23,30 @@ terraform {
   required_version = "= 0.12.13"
 }
 
-# ----------------------------------------------------------------------------------------------------------------------
-# CREATE VPC
-# ----------------------------------------------------------------------------------------------------------------------
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE LOG GROUP FOR VPC FLOW LOGS
+# ---------------------------------------------------------------------------------------------------------------------
 
-data "aws_region" "current" {}
-
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "2.17.0"
-
-  name = "${var.name_prefix}-mgmt-vpc"
-  cidr = var.cidr_block
-
-  azs             = ["${data.aws_region.current.name}a", "${data.aws_region.current.name}b", "${data.aws_region.current.name}c"]
-  private_subnets = var.private_subnets
-  public_subnets  = var.public_subnets
-
-  enable_dns_hostnames = var.enable_dns_hostnames
-  enable_dns_support   = var.enable_dns_support
-
-  enable_nat_gateway     = var.enable_nat_gateway
-  single_nat_gateway     = var.single_nat_gateway
-  one_nat_gateway_per_az = var.one_nat_gateway_per_az
+resource "aws_cloudwatch_log_group" "this" {
+  name              = var.vpc_log_group_name
+  retention_in_days = var.vpc_log_retention_in_days
 
   tags = var.tags
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE VPC FLOW LOGS
+# ---------------------------------------------------------------------------------------------------------------------
+
+locals {
+  vpc_ids = toset(var.vpc_ids)
+}
+
+resource "aws_flow_log" "this" {
+  for_each = local.vpc_ids
+
+  log_destination = aws_cloudwatch_log_group.this.arn
+  iam_role_arn    = var.vpc_flow_logs_iam_role_arn
+  vpc_id          = each.value
+  traffic_type    = "ALL"
 }

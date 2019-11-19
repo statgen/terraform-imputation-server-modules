@@ -100,12 +100,6 @@ variable "create_database_subnet_route_table" {
   default     = true
 }
 
-variable "log_bucket" {
-  description = "S3 bucket for VPC flow logs"
-  type        = string
-  default     = null
-}
-
 variable "peer_vpc_id" {
   description = "The ID of the VPC to be peered"
   type        = "string"

@@ -111,12 +111,3 @@ output "vpc_name" {
   description = "The name of the VPC as specified"
   value       = module.vpc.name
 }
-
-# ---------------------------------------------------------------------------------------------------------------------
-# VPC FLOW LOG OUTPUTS
-# ---------------------------------------------------------------------------------------------------------------------
-
-output "vpc_flow_log_id" {
-  description = "The Flow Log ID"
-  value       = aws_flow_log.vpc_flow_log.id
-}

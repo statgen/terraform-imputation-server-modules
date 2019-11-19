@@ -64,12 +64,6 @@ variable "one_nat_gateway_per_az" {
   default     = false
 }
 
-variable "log_bucket" {
-  description = "S3 bucket for VPC flow logs"
-  type        = string
-  default     = null
-}
-
 variable "tags" {
   description = "Tags to apply to module resources"
   type        = map(string)
