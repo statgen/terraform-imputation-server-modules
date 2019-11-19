@@ -57,3 +57,18 @@ output "lambda_edge_role_name" {
   description = "The name of the Lambda Edge role"
   value       = aws_iam_role.lambda_edge.name
 }
+
+output "flowlogs_role_id" {
+  description = "The ID of the FlowLogs role"
+  value       = aws_iam_role.flowlogs_cloudwatch.id
+}
+
+output "flowlogs_role_arn" {
+  description = "The ARN of the FlowLogs role"
+  value       = aws_iam_role.flowlogs_cloudwatch.arn
+}
+
+output "flowlogs_role_name" {
+  description = "The name of the FlowLogs role"
+  value       = aws_iam_role.flowlogs_cloudwatch.name
+}
