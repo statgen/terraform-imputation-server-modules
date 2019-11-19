@@ -148,3 +148,32 @@ data "aws_iam_policy_document" "allow_lambda_access" {
     actions = ["sts:AssumeRole"]
   }
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# FLOWLOGS TO CLOUDWATCH POLICY DOCUMENT
+# ---------------------------------------------------------------------------------------------------------------------
+
+data "aws_iam_policy_document" "flowlogs_trust" {
+  statement {
+    effect = "Allow"
+    principals {
+      type        = "Service"
+      identifiers = ["vpc-flow-logs.amazonaws.com"]
+    }
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+data "aws_iam_policy_document" "flowlogs_to_cloudwatch" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+      "logs:DescribeLogGroups",
+      "logs:DescribeLogStreams",
+    ]
+    resources = ["*"]
+  }
+}

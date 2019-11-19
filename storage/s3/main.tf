@@ -111,8 +111,7 @@ resource "aws_s3_bucket" "access_logs" {
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
-        sse_algorithm     = "aws:kms"
-        kms_master_key_id = aws_kms_key.this.key_id
+        sse_algorithm     = "AES256"
       }
     }
   }
@@ -144,6 +143,26 @@ resource "aws_s3_bucket_public_access_block" "access_logs" {
   ignore_public_acls      = var.ignore_public_acls
   restrict_public_buckets = var.restrict_public_buckets
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE TLD REDIRECT BUCKET
+# ---------------------------------------------------------------------------------------------------------------------
+
+# resource "aws_s3_bucket" "tld_redirect" {
+#   bucket = var.tld_redirect_bucket_name
+
+#   acl = "public-read"
+
+#   website {
+#     redirect_all_requests_to = "https://${var.tld_redirect_destination}"
+#   }
+
+#   lifecycle {
+#     prevent_destroy = true
+#   }
+
+#   tags = var.tags
+# }
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ATTACH POLICY TO BUCKETS

@@ -46,6 +46,18 @@ variable "access_logs_bucket_name" {
   default     = null
 }
 
+variable "tld_redirect_bucket_name" {
+  description = "S3 bucket name for TLD redirect. MUST BE EXACT TLD NAME!"
+  type        = string
+  default     = null
+}
+
+variable "tld_redirect_destination" {
+  description = "The domain to which the TLD will redirect to eg: example.net"
+  type        = string
+  default     = null
+}
+
 variable "lifecycle_glacier_transition_days" {
   description = "The number of days after object creation when the object is archived into Glacier"
   type        = number

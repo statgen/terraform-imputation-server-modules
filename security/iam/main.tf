@@ -83,6 +83,27 @@ resource "aws_iam_role_policy_attachment" "lambda_basics" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# CREATE ROLE FOR FLOWLOGS TO CLOUDWATCH
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_iam_role" "flowlogs_cloudwatch" {
+  name               = "CSG-FlowLogs-Cloudwatch-Delivery-Role"
+  description        = "Delegate permissions for Flowlogs to push logs to CloudWatch"
+  assume_role_policy = data.aws_iam_policy_document.flowlogs_trust.json
+}
+
+resource "aws_iam_policy" "flowlogs_cloudwatch" {
+  name        = "FlowLogsCloudWatchWrite"
+  description = "Allow FlowLogs to write to CloudWatch log stream"
+  policy      = data.aws_iam_policy_document.flowlogs_to_cloudwatch.json
+}
+
+resource "aws_iam_role_policy_attachment" "flowlogs_cloudwatch" {
+  role       = aws_iam_role.flowlogs_cloudwatch.name
+  policy_arn = aws_iam_policy.flowlogs_cloudwatch.arn
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # CREATE IAM POLICY
 # ---------------------------------------------------------------------------------------------------------------------
 
