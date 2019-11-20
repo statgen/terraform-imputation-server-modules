@@ -28,7 +28,6 @@ terraform {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_waf_web_acl" "this" {
-  depends_on  = [aws_waf_ipset.this, aws_waf_rule.this]
   name        = "restrictDevAccessUmich"
   metric_name = "restrictDevAccessUmich"
 
@@ -50,7 +49,6 @@ resource "aws_waf_web_acl" "this" {
 }
 
 resource "aws_waf_rule" "this" {
-  depends_on  = [aws_waf_ipset.this]
   name        = "restrictDevAccessUmich"
   metric_name = "restrictDevAccessUmich"
 
