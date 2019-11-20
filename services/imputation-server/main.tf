@@ -42,16 +42,16 @@ module "imputation-server" {
   emr_managed_slave_security_group  = var.emr_managed_slave_security_group
   service_access_security_group     = var.service_access_security_group
 
-  master_instance_type = var.master_instance_type
+  master_instance_type     = var.master_instance_type
   master_instance_ebs_size = var.master_instance_ebs_size
 
-  core_instance_type = var.core_instance_type
-  core_instance_ebs_size = var.core_instance_ebs_size
+  core_instance_type      = var.core_instance_type
+  core_instance_ebs_size  = var.core_instance_ebs_size
   core_instance_count_max = var.core_instance_count_max
   core_instance_count_min = var.core_instance_count_min
 
-  task_instance_type = var.task_instance_type
-  task_instance_ebs_size = var.task_instance_ebs_size
+  task_instance_type      = var.task_instance_type
+  task_instance_ebs_size  = var.task_instance_ebs_size
   task_instance_count_max = var.task_instance_count_max
   task_instance_count_min = var.task_instance_count_min
 
