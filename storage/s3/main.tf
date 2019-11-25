@@ -80,7 +80,7 @@ resource "aws_s3_bucket" "logs" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = var.tags
@@ -129,7 +129,7 @@ resource "aws_s3_bucket" "access_logs" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = var.tags
