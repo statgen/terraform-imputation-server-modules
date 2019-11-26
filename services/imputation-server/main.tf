@@ -42,6 +42,12 @@ module "imputation-server" {
   emr_managed_slave_security_group  = var.emr_managed_slave_security_group
   service_access_security_group     = var.service_access_security_group
 
+  ec2_autoscaling_role_name = var.ec2_autoscaling_role_name
+  ec2_role_arn              = var.ec2_role_arn
+  ec2_instance_profile_name = var.ec2_instance_profile_name
+  emr_role_arn              = var.emr_role_arn
+  emr_role_name             = var.emr_role_name
+
   master_instance_type     = var.master_instance_type
   master_instance_ebs_size = var.master_instance_ebs_size
 

@@ -28,6 +28,36 @@ variable "ec2_subnet" {
   default     = null
 }
 
+variable "ec2_autoscaling_role_name" {
+  description = "The name of the role for EC2 instance autoscaling"
+  type        = string
+  default     = null
+}
+
+variable "ec2_role_arn" {
+  description = "The ARN of the role for the EC2 instances in the EMR cluster"
+  type        = string
+  default     = null
+}
+
+variable "ec2_instance_profile_name" {
+  description = "The name of the instance profile for the EC2 instances in the EMR cluster"
+  type        = string
+  default     = null
+}
+
+variable "emr_role_arn" {
+  description = "The ARN of the role for the EMR cluster"
+  type        = string
+  default     = null
+}
+
+variable "emr_role_name" {
+  description = "The name of the role for the EMR cluster"
+  type        = string
+  default     = null
+}
+
 variable "emr_managed_master_security_group" {
   description = "Managed security group for EMR cluster master node(s)"
   type        = string
