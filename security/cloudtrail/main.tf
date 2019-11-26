@@ -28,7 +28,7 @@ terraform {
 # ---------------------------------------------------------------------------------------------------------------------
 
 module "cloudtrail" {
-  source = "git@github.com:nozaq/terraform-aws-secure-baseline.git//modules/cloudtrail-baseline?ref=0.16.2"
+  source = "github.com/nozaq/terraform-aws-secure-baseline.git//modules/cloudtrail-baseline?ref=0.16.2"
 
   aws_account_id = element(var.aws_account_id, 0)
 
