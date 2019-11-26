@@ -177,3 +177,46 @@ data "aws_iam_policy_document" "flowlogs_to_cloudwatch" {
     resources = ["*"]
   }
 }
+
+# ---------------------------------------------------------------------------------------------------------------------
+# EMR POLICY DOCUMENTS
+# ---------------------------------------------------------------------------------------------------------------------
+
+data "aws_iam_policy_document" "assume_role_emr" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["elasticmapreduce.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+data "aws_iam_policy_document" "assume_role_ec2" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+data "aws_iam_policy_document" "application_autoscaling" {
+  statement {
+    effect = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["application-autoscaling.amazonaws.com", "elasticmapreduce.amazonaws.com"]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}

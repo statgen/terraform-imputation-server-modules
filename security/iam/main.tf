@@ -87,7 +87,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basics" {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_iam_role" "flowlogs_cloudwatch" {
-  name               = "CSG-FlowLogs-Cloudwatch-Delivery-Role"
+  name               = "FlowLogsCloudwatchDeliveryRole"
   description        = "Delegate permissions for Flowlogs to push logs to CloudWatch"
   assume_role_policy = data.aws_iam_policy_document.flowlogs_trust.json
 }
@@ -101,6 +101,57 @@ resource "aws_iam_policy" "flowlogs_cloudwatch" {
 resource "aws_iam_role_policy_attachment" "flowlogs_cloudwatch" {
   role       = aws_iam_role.flowlogs_cloudwatch.name
   policy_arn = aws_iam_policy.flowlogs_cloudwatch.arn
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE ROLES FOR EMR CLUSTER
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_iam_role" "emr" {
+  name               = "EMRClusterRole"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_emr.json
+
+  tags = var.tags
+}
+
+resource "aws_iam_role" "ec2" {
+  name               = "EMREC2InstanceRole"
+  assume_role_policy = data.aws_iam_policy_document.assume_role_ec2.json
+
+  tags = var.tags
+}
+
+resource "aws_iam_role" "ec2_autoscaling" {
+  name               = "EMREC2AutoscalingRole"
+  assume_role_policy = data.aws_iam_policy_document.application_autoscaling.json
+
+  tags = var.tags
+}
+
+resource "aws_iam_instance_profile" "ec2" {
+  name = aws_iam_role.ec2.name
+  role = aws_iam_role.ec2.name
+}
+
+# Attach Policy Documents to EMR Roles
+resource "aws_iam_role_policy_attachment" "emr" {
+  role       = aws_iam_role.emr.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceRole"
+}
+
+resource "aws_iam_role_policy_attachment" "ec2" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforEC2Role"
+}
+
+resource "aws_iam_role_policy_attachment" "cloudwatch" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_autoscaling" {
+  role       = aws_iam_role.ec2_autoscaling.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonElasticMapReduceforAutoScalingRole"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
