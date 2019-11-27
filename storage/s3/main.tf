@@ -148,21 +148,21 @@ resource "aws_s3_bucket_public_access_block" "access_logs" {
 # CREATE TLD REDIRECT BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
 
-# resource "aws_s3_bucket" "tld_redirect" {
-#   bucket = var.tld_redirect_bucket_name
+resource "aws_s3_bucket" "tld_redirect" {
+  bucket = var.tld_redirect_bucket_name
 
-#   acl = "public-read"
+  acl = "public-read"
 
-#   website {
-#     redirect_all_requests_to = "https://${var.tld_redirect_destination}"
-#   }
+  website {
+    redirect_all_requests_to = "https://${var.tld_redirect_destination}"
+  }
 
-#   lifecycle {
-#     prevent_destroy = true
-#   }
+  lifecycle {
+    prevent_destroy = true
+  }
 
-#   tags = var.tags
-# }
+  tags = var.tags
+}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ATTACH POLICY TO BUCKETS
