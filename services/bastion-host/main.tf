@@ -35,7 +35,7 @@ data "aws_ami" "this" {
     values = ["csg/images/csg-bastion-*"]
   }
 
-  owners = ["536148068215"]
+  owners = ["017117783718"]
 }
 
 module "ec2_instance" {
