@@ -165,6 +165,27 @@ resource "aws_s3_bucket" "tld_redirect" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# CREATE IMPUTATION SERVER BUCKET
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_s3_bucket" "imputation_server" {
+  bucket = var.imputation_server_bucket_name
+
+  acl = "private"
+
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm     = "aws:kms"
+        kms_master_key_id = aws_kms_key.this.key_id
+      }
+    }
+  }
+
+  tags = var.tags
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # ATTACH POLICY TO BUCKETS
 # ---------------------------------------------------------------------------------------------------------------------
 

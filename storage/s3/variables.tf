@@ -46,6 +46,12 @@ variable "access_logs_bucket_name" {
   default     = null
 }
 
+variable "imputation_server_bucket_name" {
+  description = "S3 bucket name for imputation server"
+  type        = string
+  default     = null
+}
+
 variable "tld_redirect_bucket_name" {
   description = "S3 bucket name for TLD redirect. MUST BE EXACT TLD NAME!"
   type        = string
