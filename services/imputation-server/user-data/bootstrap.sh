@@ -5,7 +5,7 @@ set -e
 readonly CLOUDWATCH_CONFIG_FILE="cloudwatch-config.json"
 readonly DOWNLOAD_CLOUDWATCH_PACKAGE_PATH="/tmp/amazon-cloudwatch-agent.rpm"
 readonly CLOUDWATCH_CONFIGURATION_PATH="/opt/aws/amazon-cloudwatch-agent/config"
-readonly SETUP_BUCKET_NAME="csg-imputation-setup"
+readonly SETUP_BUCKET_NAME="nih-nhlbi-imputation-server"
 
 readonly SCRIPT_NAME="$(basename "$0")"
 
