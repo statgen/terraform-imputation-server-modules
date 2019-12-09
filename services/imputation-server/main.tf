@@ -47,6 +47,7 @@ module "imputation-server" {
   ec2_instance_profile_name = var.ec2_instance_profile_name
   emr_role_arn              = var.emr_role_arn
   emr_role_name             = var.emr_role_name
+  emr_release_label         = var.emr_release_label
 
   master_instance_type     = var.master_instance_type
   master_instance_ebs_size = var.master_instance_ebs_size
