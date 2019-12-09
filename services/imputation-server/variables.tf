@@ -88,6 +88,12 @@ variable "emr_release_label" {
   default     = "null"
 }
 
+variable "log_uri" {
+  description = "The S3 bucket to which logs will be written"
+  type        = string
+  default     = null
+}
+
 variable "bootstrap_action" {
   description = "List of bootstrap actions that will be run before Hadoop is started on the cluster"
   default     = []
