@@ -68,7 +68,7 @@ resource "aws_cloudfront_distribution" "this" {
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = []
+    cached_methods   = ["GET", "HEAD"]
     target_origin_id = local.origin_id
 
     forwarded_values {

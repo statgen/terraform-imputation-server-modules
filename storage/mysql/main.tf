@@ -49,8 +49,8 @@ module "rds" {
 
   vpc_security_group_ids = [var.database_sg_id]
 
-  major_engine_version = "8.0"
-  family               = "mysql8.0"
+  major_engine_version = "5.7"
+  family               = "mysql5.7"
 
   maintenance_window = var.maintenance_window
   backup_window      = var.backup_window

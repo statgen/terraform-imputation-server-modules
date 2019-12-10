@@ -43,7 +43,7 @@ variable "emr_master_sg_id" {
 variable "mysql_engine_version" {
   description = "MySQL engine verison"
   type        = string
-  default     = "8.0.15"
+  default     = "5.7.22"
 }
 
 variable "db_instance_class" {
