@@ -46,6 +46,12 @@ variable "mysql_engine_version" {
   default     = "5.7.22"
 }
 
+variable "multi_az" {
+  description = "Specifies if the RDS instance is multi-AZ"
+  type        = string
+  default     = false
+}
+
 variable "db_instance_class" {
   description = "DB instance class type"
   type        = string

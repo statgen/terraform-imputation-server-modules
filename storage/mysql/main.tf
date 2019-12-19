@@ -39,6 +39,8 @@ module "rds" {
   allocated_storage = var.db_storage
   storage_encrypted = true
 
+  multi_az = var.multi_az
+
   name     = "imputationdb"
   username = var.db_username
   password = var.db_password
