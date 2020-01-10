@@ -28,8 +28,8 @@ terraform {
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_waf_web_acl" "this" {
-  name        = "restrictDevAccessUmich"
-  metric_name = "restrictDevAccessUmich"
+  name        = "ipBlackList"
+  metric_name = "ipBlackListHits"
 
   default_action {
     type = "ALLOW"
@@ -37,7 +37,7 @@ resource "aws_waf_web_acl" "this" {
 
   rules {
     action {
-      type = "COUNT"
+      type = "BLOCK"
     }
 
     priority = 10
@@ -49,58 +49,26 @@ resource "aws_waf_web_acl" "this" {
 }
 
 resource "aws_waf_rule" "this" {
-  name        = "restrictDevAccessUmich"
-  metric_name = "restrictDevAccessUmich"
+  name        = "ipBlackList"
+  metric_name = "ipBlackListHits"
 
-  # Does not originate from these IP cidrs
   predicates {
     data_id = aws_waf_ipset.this.id
-    negated = true
-    type    = "IPMatch"
-  }
-
-  # && Does match the Regex outlined
-  predicates {
-    data_id = aws_waf_regex_match_set.this.id
     negated = false
-    type    = "RegexMatch"
+    type    = "IPMatch"
   }
 
   tags = var.tags
 }
 
 resource "aws_waf_ipset" "this" {
-  name = "restrictDevAccessUmich"
+  name = "ipBlackList"
 
-  ip_set_descriptors {
-    type  = "IPV4"
-    value = "141.211.8.0/22"
-  }
-
-  ip_set_descriptors {
-    type  = "IPV4"
-    value = "141.211.29.64/26"
-  }
-
-  ip_set_descriptors {
-    type  = "IPV4"
-    value = "141.213.128.0/17"
-  }
-}
-
-resource "aws_waf_regex_pattern_set" "this" {
-  name                  = "restrictDevAccessUmich"
-  regex_pattern_strings = ["[a-z0-9]+[.]dev[.]imputationserver[.]org"]
-}
-
-resource "aws_waf_regex_match_set" "this" {
-  name = "restrictDevAccessUmich"
-  regex_match_tuple {
-    field_to_match {
-      type = "URI"
+  dynamic "ip_set_descriptors" {
+    for_each = var.ipv4_address_blacklist
+    content {
+      type  = "IPV4"
+      value = ip_set_descriptors.value
     }
-
-    regex_pattern_set_id = aws_waf_regex_pattern_set.this.id
-    text_transformation  = "LOWERCASE"
   }
 }
