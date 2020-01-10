@@ -105,6 +105,8 @@ resource "aws_cloudfront_distribution" "this" {
     minimum_protocol_version = "TLSv1.2_2018"
   }
 
+  web_acl_id = var.web_acl_id
+
   tags = var.tags
 }
 

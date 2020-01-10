@@ -46,6 +46,12 @@ variable "route53_zone_id" {
   default     = null
 }
 
+variable "web_acl_id" {
+  description = "The ID of the AWS WAF web ACL that is associated with the distribution"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to module resources"
   type        = map(string)
