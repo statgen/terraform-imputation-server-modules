@@ -79,7 +79,7 @@ resource "aws_vpc_peering_connection" "this" {
     allow_remote_vpc_dns_resolution = true
   }
 
-  tags = "${merge(local.tags, var.tags)}"
+  tags = merge(local.tags, var.tags)
 }
 
 # Update route tables for VPC peering

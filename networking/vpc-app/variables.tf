@@ -102,7 +102,7 @@ variable "create_database_subnet_route_table" {
 
 variable "peer_vpc_id" {
   description = "The ID of the VPC to be peered"
-  type        = "string"
+  type        = string
   default     = null
 }
 
