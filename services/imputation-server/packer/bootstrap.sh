@@ -5,7 +5,6 @@ set -e
 readonly CLOUDWATCH_CONFIG_FILE="cloudwatch-config.json"
 readonly DOWNLOAD_CLOUDWATCH_PACKAGE_PATH="/tmp/amazon-cloudwatch-agent.rpm"
 readonly CLOUDWATCH_CONFIGURATION_PATH="/opt/aws/amazon-cloudwatch-agent/config"
-readonly SETUP_BUCKET_NAME="nih-nhlbi-imputation-server"
 
 readonly SCRIPT_NAME="$(basename "$0")"
 
@@ -99,24 +98,28 @@ function install_cloudwatch_agent {
   sudo rpm -U "$DOWNLOAD_CLOUDWATCH_PACKAGE_PATH"
 
   sudo mkdir -p "$CLOUDWATCH_CONFIGURATION_PATH"
-  sudo aws s3 cp "s3://${SETUP_BUCKET_NAME}/rhel/cloudwatch-config.json" "${CLOUDWATCH_CONFIGURATION_PATH}/${CLOUDWATCH_CONFIG_FILE}"
+  sudo mv "/tmp/cloudwatch-config.json" "${CLOUDWATCH_CONFIGURATION_PATH}/${CLOUDWATCH_CONFIG_FILE}"
 
   log_info "Starting CloudWatch agent"
   sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:"${CLOUDWATCH_CONFIGURATION_PATH}/${CLOUDWATCH_CONFIG_FILE}" -s
 }
 
-function configure_system_use_notification {
-  log_info "Configuring system use notification"
+function install_node_exporter {
+  log_info "Installing node_exporter"
 
-  sudo bash -c 'echo "************************************************************************" > /etc/issue.net'
-  sudo bash -c 'echo "* By your use of these resources, you agree to abide by Proper Use of  *" >> /etc/issue.net'
-  sudo bash -c 'echo "* Information Resources, Information Technology, and Networks at the   *" >> /etc/issue.net'
-  sudo bash -c 'echo "* University of Michigan (SPG 601.07), in addition to all relevant     *" >> /etc/issue.net'
-  sudo bash -c 'echo "* state and federal laws.                                              *" >> /etc/issue.net'
-  sudo bash -c 'echo "* https://spg.umich.edu/policy/601.07                                  *" >> /etc/issue.net'
-  sudo bash -c 'echo "************************************************************************" >> /etc/issue.net'
+  retry \
+    "curl -o '/tmp/node_exporter-0.18.1.linux-amd64.tar.gz' 'https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz' --location --silent --fail --show-error" \
+    "Downloading node_exporter to /tmp/" 
+  sudo tar -xf "/tmp/node_exporter-0.18.1.linux-amd64.tar.gz" -C "/tmp/"
+  sudo mkdir -p "/opt/prometheus"
+  sudo mv "/tmp/node_exporter-0.18.1.linux-amd64" "/opt/prometheus/node_exporter"
 
-  sudo sed -i "s=#Banner none=Banner /etc/issue.net=g" "/etc/ssh/sshd_config"
+  # Amazon Linux uses upstart... 
+  sudo mv "/tmp/node_exporter.conf" "/etc/init/node_exporter.conf"
+
+  log_info "Starting node_exporter daemon..."
+
+  sudo initctl start node_exporter
 }
 
 function install {
@@ -125,15 +128,10 @@ function install {
 
   log_info "Starting setup"
 
-  if ! $(is_master); then
-    log_info "Instance is not EMR master, exiting"
-    exit 0
-  fi
-
   install_dependencies
   fetch_cloudwatch_pkg "$version" "$download_url"
   install_cloudwatch_agent
-  configure_system_use_notification
+  install_node_exporter
 }
 
 install "$@"
