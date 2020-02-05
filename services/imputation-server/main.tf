@@ -66,6 +66,7 @@ module "imputation-server" {
   public_key = var.public_key
 
   bootstrap_action = var.bootstrap_action
+  custom_ami_id    = var.custom_ami_id
 
   tags = var.tags
 }

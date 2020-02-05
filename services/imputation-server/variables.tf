@@ -10,6 +10,12 @@ variable "aws_account_id" {
   default     = null
 }
 
+variable "custom_ami_id" {
+  description = "A custom AMI for the EMR cluster"
+  type        = string
+  default     = null
+}
+
 variable "name_prefix" {
   description = "A name prefix used in resource names to ensure uniqueness accross acounts"
   type        = string
