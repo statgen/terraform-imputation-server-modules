@@ -4,3 +4,6 @@
 
 ## Artifacts
 services/bastion-host/packer/Ubuntu1804-CIS
+
+## Config files
+configuration/bucket-data/configuration/config/settings.yaml

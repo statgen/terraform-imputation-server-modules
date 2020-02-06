@@ -1,0 +1,92 @@
+<div class="jumbotron jumbotron-fluid text-white text-center" style="background: #616265; margin-bottom: 0px; ">
+    <div class="container">
+        <h1 class="jumbotron-heading">TOPMed Imputation Server</h1>
+        <p class="lead text-center">
+            Free Next-Generation Genotype Imputation Service
+        </p>
+        {{#is(loggedIn, false)}}
+        <p>
+            <br>
+            <a class="btn btn-lg btn-success" href="/#!pages/register">Sign up now</a>&nbsp;
+            <a class="btn btn-lg btn-outline-light" href="/#!pages/login">Login</a>
+        </p>
+        {{/is}}
+
+    </div>
+</div>
+
+<div class="text-white" style="background: #c0143c;">
+    <div class="container pt-3">
+        <!-- <div class="row justify-content-center text-center ">
+            <div class="col-md-9 text-center">
+                <p>
+                    Brought to you by <a class="text-white"
+                        href="https://imputationserver.sph.umich.edu/index.html#!">Michigan Imputation Server</a>, <a
+                        class="text-white" href="https://nhlbiwgs.org">NHLBI TOPMed Project</a>, and <a
+                        class="text-white" href="https://www.nhlbidatastage.org/">NHLBI BioData Catalyst</a>
+                </p>
+            </div>
+        </div> -->
+    </div>
+</div>
+
+<div class="bg-light py-5">
+    <div class="container">
+        <h2 class="text-center pb-3">Brought to you by</h2>
+
+        <!-- Credits -->
+
+        <div class="card-deck text-center">
+            <div class="card box-shadow">
+                <div class="card-body">
+                    <a href="https://imputationserver.sph.umich.edu/index.html#!"><img
+                            src="/static/images/michigan-imputation-server-logo.png" width="300px"></a>
+                </div>
+            </div>
+            <div class="card box-shadow">
+                <div class="card-body">
+                    <a href="https://nhlbiwgs.org"><img src="/static/images/nhlbi-topmed-logo.png" width="300px"></a>
+                </div>
+            </div>
+            <div class="card box-shadow">
+                <div class="card-body">
+                    <a href="https://www.nhlbidatastage.org/"><img src="/static/images/nhlbi-biodata-catalyst-logo.png"
+                            width="300px"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="bg-light py-5" style="margin-top: 0px;">
+    <div class="container">
+
+
+        <h2 class="text-center pb-3">The easiest way to impute genotypes</h2>
+
+        <!-- Workflow Description -->
+
+        <div class="card-deck text-center ">
+            <div class="card box-shadow">
+                <div class="card-body">
+                    <p><img src="/static/images/up-cloud.png" width="105px"></p>
+                    <b>Upload your genotypes to our secured service.</b>
+                </div>
+            </div>
+            <div class="card box-shadow">
+                <div class="card-body">
+                    <p><img src="/static/images/impute.png" width="105px"></p>
+                    <b>Choose a reference panel</b>. We will take care of pre-phasing and imputation.
+                </div>
+            </div>
+            <div class="card box-shadow">
+                <div class="card-body">
+                    <p><img src="/static/images/down-cloud.png" width="105px"></p>
+                    <b>Download the results</b>.<br>All results are encrypted with a one-time password. After 7 days,
+                    all results are deleted from our server.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
