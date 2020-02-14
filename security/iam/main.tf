@@ -27,19 +27,19 @@ terraform {
 # CREATE FULL-ACCESS GROUP AND ATTACH POLICY
 # ---------------------------------------------------------------------------------------------------------------------
 
-resource "aws_iam_group" "full_access" {
-  name = "full-access"
-}
+# resource "aws_iam_group" "full_access" {
+#   name = "full-access"
+# }
 
-resource "aws_iam_group_policy_attachment" "force_mfa" {
-  group      = aws_iam_group.full_access.name
-  policy_arn = aws_iam_policy.force_mfa.arn
-}
+# resource "aws_iam_group_policy_attachment" "force_mfa" {
+#   group      = aws_iam_group.full_access.name
+#   policy_arn = aws_iam_policy.force_mfa.arn
+# }
 
-resource "aws_iam_group_policy_attachment" "full_access" {
-  group      = aws_iam_group.full_access.name
-  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
+# resource "aws_iam_group_policy_attachment" "full_access" {
+#   group      = aws_iam_group.full_access.name
+#   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+# }
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE ROLE AND INSTANCE PROFILE FOR BASTION HOST
@@ -147,6 +147,11 @@ resource "aws_iam_role_policy_attachment" "ec2" {
 resource "aws_iam_role_policy_attachment" "cloudwatch" {
   role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "ssm" {
+  role       = aws_iam_role.ec2.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
 resource "aws_iam_role_policy_attachment" "ec2_autoscaling" {

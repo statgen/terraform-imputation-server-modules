@@ -101,6 +101,11 @@ function start_cloudgene {
     sudo ./cloudgene-aws &
 }
 
+function sshd_setup {
+  chmod 700 /home/hadoop/.ssh
+  chmod 600 /home/hadoop/.ssh/*
+}
+
 function install {
     log_info "Starting setup"
 
@@ -115,6 +120,7 @@ function install {
     install_reference_panels
     configure_directories
     start_cloudgene
+    sshd_setup
 }
 
 install "$@"

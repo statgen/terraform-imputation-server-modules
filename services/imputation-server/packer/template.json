@@ -12,15 +12,7 @@
         "region": "{{user `aws_region`}}",
         "ami_name": "imputation-server-{{isotime \"20060102-030405\"}}",
         "ami_description": "Base AMI for imputation server EMR instances",
-        "source_ami_filter": {
-            "filters": {
-                "virtualization-type": "hvm",
-                "name": "amzn-ami-hvm-2018.03*",
-                "root-device-type": "ebs"
-            },
-            "owners": ["137112412989"],
-            "most_recent": true
-        },
+        "source_ami": "ami-0ff8a91507f77f867",
         "instance_type": "t2.large",
         "ssh_username": "ec2-user",
         "tags": {
