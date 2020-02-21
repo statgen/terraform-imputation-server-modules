@@ -52,53 +52,60 @@ function is_master {
 
 ## Install and setup Cloudgene
 function install_cloudgene {
-    log_info "Installing CloudGene"
+  log_info "Installing CloudGene"
 
-    cd /home/hadoop
-    curl -s install.cloudgene.io | bash
+  cd /home/hadoop
+  curl -s install.cloudgene.io | bash
 }
 
 ## Install and setup Docker
 function install_docker {
-    log_info "Installing Docker"
+  log_info "Installing Docker"
 
-    sudo yum update -y
-    sudo yum install -y docker
-    sudo service docker start
-    sudo usermod -a -G docker hadoop
+  sudo yum update -y
+  sudo yum install -y docker
+  sudo service docker start
+  sudo usermod -a -G docker hadoop
 }
 
 ## Customize Cloudgene installation
 function configure_cloudgene {
-    log_info "Configuring CloudGene"
+  log_info "Configuring CloudGene"
 
-    cd /home/hadoop
-    aws s3 sync s3://${IMPUTATION_SERVER_BUCKET}/configuration .
-    chmod +x cloudgene-aws
+  cd /home/hadoop
+  aws s3 sync s3://${IMPUTATION_SERVER_BUCKET}/configuration .
+  chmod +x cloudgene-aws
 }
 
 ## Install imputationserver and reference panels
 function install_reference_panels {
-    log_info "Installing reference panels"
+  log_info "Installing reference panels"
 
-    cd /home/hadoop
-    ./cloudgene clone s3://${IMPUTATION_SERVER_BUCKET}/apps.yaml
+  cd /home/hadoop
+  ./cloudgene clone s3://${IMPUTATION_SERVER_BUCKET}/apps.yaml
 }
 
 ## Set tmp-directory to ebs volume.
 function configure_directories {
-    log_info "Configuring application directories"
-
-    echo "minimac.tmp=/mnt/mapred" > "/mnt/apps/imputationserver/${IMPUTATION_SERVER_VERSION}/job.config"
-    echo "chunksize=10000000" >> "/mnt/apps/imputationserver/${IMPUTATION_SERVER_VERSION}/job.config"
+  log_info "Configuring application directories"
+  cat <<- 'EOF' > "/mnt/apps/imputationserver/${IMPUTATION_SERVER_VERSION}/job.config"
+  minimac.command=--refHaps ${ref} --haps ${vcf} --start ${start} --end ${end} --window ${window} --prefix ${prefix} --chr ${chr} --cpus 4 --noPhoneHome --format GT,DS,GP --allTypedSites --meta --minRatio 0.00001  ${unphased ? '--unphasedOutput' : ''} ${mapMinimac != null ? '--referenceEstimates --map ' + mapMinimac : ''}
+  minimac.tmp=/mnt/mapred
+  chunksize=10000000
+  phasing.window=5000000
+  minimac.window=500000
+  samples.max=110000
+  minimac.sendmail=yes
+  server.url=https://topmed.imputationserver.org
+EOF
 }
 
 ## Start webservice on port 8082 by default. Needs sudo to avoid permission issues with docker.
 function start_cloudgene {
-    log_info "Starting CloudGene"
+  log_info "Starting CloudGene"
 
-    cd /home/hadoop
-    sudo ./cloudgene-aws &
+  cd /home/hadoop
+  sudo ./cloudgene-aws &
 }
 
 function sshd_setup {
@@ -107,20 +114,20 @@ function sshd_setup {
 }
 
 function install {
-    log_info "Starting setup"
+  log_info "Starting setup"
 
-    if ! $(is_master); then
-        log_error "Instance is not EMR master, exiting"
-        exit 0
-    fi
+  if ! $(is_master); then
+      log_error "Instance is not EMR master, exiting"
+      exit 0
+  fi
 
-    install_cloudgene
-    install_docker
-    configure_cloudgene
-    install_reference_panels
-    configure_directories
-    start_cloudgene
-    sshd_setup
+  install_cloudgene
+  install_docker
+  configure_cloudgene
+  install_reference_panels
+  configure_directories
+  start_cloudgene
+  sshd_setup
 }
 
 install "$@"
