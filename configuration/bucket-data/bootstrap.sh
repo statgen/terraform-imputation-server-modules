@@ -108,17 +108,12 @@ function start_cloudgene {
   sudo ./cloudgene-aws &
 }
 
-function sshd_setup {
-  chmod 700 /home/hadoop/.ssh
-  chmod 600 /home/hadoop/.ssh/*
-}
-
 function install {
   log_info "Starting setup"
 
   if ! $(is_master); then
-      log_error "Instance is not EMR master, exiting"
-      exit 0
+    log_error "Instance is not EMR master, exiting"
+    exit 0
   fi
 
   install_cloudgene
@@ -127,7 +122,6 @@ function install {
   install_reference_panels
   configure_directories
   start_cloudgene
-  sshd_setup
 }
 
 install "$@"
