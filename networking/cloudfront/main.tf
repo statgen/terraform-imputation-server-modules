@@ -20,11 +20,15 @@ terraform {
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = "= 0.12.20"
+  required_version = "= 0.12.21"
 }
 
 data "aws_acm_certificate" "this" {
   domain = var.sub_domain
+}
+
+data "aws_acm_certificate" "gov" {
+  domain = "imputation.biodatacatalyst.nhlbi.nih.gov"
 }
 
 data "archive_file" "this" {
@@ -34,7 +38,7 @@ data "archive_file" "this" {
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
-# CREATE CLOUDFRONT DISTRIBUTION
+# CREATE IMPUTATION CLOUDFRONT DISTRIBUTION
 # ----------------------------------------------------------------------------------------------------------------------
 
 locals {
@@ -72,7 +76,7 @@ resource "aws_cloudfront_distribution" "this" {
     target_origin_id = local.origin_id
 
     forwarded_values {
-      query_string = false
+      query_string = true
 
       headers = ["*"]
 
@@ -83,8 +87,8 @@ resource "aws_cloudfront_distribution" "this" {
 
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
+    default_ttl            = 0
+    max_ttl                = 0
 
     lambda_function_association {
       event_type   = "origin-response"
@@ -111,6 +115,83 @@ resource "aws_cloudfront_distribution" "this" {
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
+# CREATE GOV CLOUDFRONT DISTRIBUTION
+# ----------------------------------------------------------------------------------------------------------------------
+
+locals {
+  gov_origin_id = "${var.name_prefix}-gov-cloudfront-origin"
+}
+
+resource "aws_cloudfront_distribution" "gov" {
+  origin {
+    domain_name = var.lb_dns_name
+    origin_id   = local.gov_origin_id
+
+    custom_origin_config {
+      http_port              = "80"
+      https_port             = "443"
+      origin_protocol_policy = "https-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+    }
+  }
+
+  enabled             = true
+  is_ipv6_enabled     = false
+  default_root_object = "index.html"
+
+  logging_config {
+    include_cookies = false
+    bucket          = var.log_bucket
+    prefix          = "cloudfront-gov"
+  }
+
+  aliases = ["imputation.biodatacatalyst.nhlbi.nih.gov"]
+
+  default_cache_behavior {
+    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = local.gov_origin_id
+
+    forwarded_values {
+      query_string = true
+
+      headers = ["*"]
+
+      cookies {
+        forward = "all"
+      }
+    }
+
+    viewer_protocol_policy = "redirect-to-https"
+    min_ttl                = 0
+    default_ttl            = 0
+    max_ttl                = 0
+
+    lambda_function_association {
+      event_type   = "origin-response"
+      lambda_arn   = aws_lambda_function.this.qualified_arn
+      include_body = false
+    }
+  }
+
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+
+  viewer_certificate {
+    acm_certificate_arn      = data.aws_acm_certificate.gov.arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.1_2016"
+  }
+
+  web_acl_id = var.web_acl_id
+
+  tags = var.tags
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
 # CREATE LAMBDA@EDGE FUNCTION
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -121,7 +202,7 @@ resource "aws_lambda_function" "this" {
   handler       = "index.handler"
   publish       = true
 
-  source_code_hash = "${filebase64sha256("functions/function.zip")}"
+  source_code_hash = filebase64sha256("functions/function.zip")
 
   description = "Lambda Edge function to set proper security headers"
 

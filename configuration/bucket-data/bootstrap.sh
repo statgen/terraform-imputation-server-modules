@@ -8,7 +8,8 @@ exec 2>&1
 # if any command or pipeline returns non-zero exit status.
 set -eo pipefail
 
-readonly IMPUTATION_SERVER_VERSION="1.2.5"
+readonly IMPUTATION_SERVER_VERSION="1.2.7"
+readonly CLOUDGENE_VERSION="2.1.3"
 readonly IMPUTATION_SERVER_BUCKET="nih-nhlbi-imputation-server"
 
 function log {
@@ -55,7 +56,7 @@ function install_cloudgene {
   log_info "Installing CloudGene"
 
   cd /home/hadoop
-  curl -s install.cloudgene.io | bash
+  curl -s install.cloudgene.io | bash -s ${CLOUDGENE_VERSION}
 }
 
 ## Install and setup Docker
@@ -96,6 +97,10 @@ function configure_directories {
   minimac.window=500000
   samples.max=110000
   minimac.sendmail=yes
+  minimac.sendmail.error=pleiness+imputation@umich.edu
+  contact.name=Jacob Pleiness
+  contact.email=pleiness+imputation@umich.edu
+  eagle.command=--vcfRef ${ref} --vcfTarget ${vcf} --geneticMapFile ${map} --outPrefix ${prefix} --bpStart ${start} --bpEnd ${end} --allowRefAltSwap --vcfOutFormat z --keepMissingPloidyX --numThreads 4
   server.url=https://topmed.imputationserver.org
 EOF
 }

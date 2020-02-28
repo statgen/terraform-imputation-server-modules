@@ -121,7 +121,7 @@ variable "core_instance_count_max" {
 variable "core_instance_count_min" {
   description = "Min capacity for core instance ASG"
   type        = number
-  default     = 3
+  default     = 4
 }
 
 variable "core_instance_ebs_size" {
