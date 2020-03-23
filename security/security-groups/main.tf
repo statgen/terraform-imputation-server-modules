@@ -197,6 +197,30 @@ resource "aws_security_group_rule" "emr_master_imputation_ingress" {
   security_group_id = aws_security_group.emr_master.id
 }
 
+resource "aws_security_group_rule" "emr_master_prometheus_ingress" {
+  type                     = "ingress"
+  from_port                = "9090"
+  to_port                  = "9106"
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.monitoring_hosts.id
+
+  description = "Allow ingress Prometheus monitoring stats ingress from monitoring group"
+
+  security_group_id = aws_security_group.emr_master.id
+}
+
+resource "aws_security_group_rule" "emr_slave_prometheus_ingress" {
+  type                     = "ingress"
+  from_port                = "9090"
+  to_port                  = "9106"
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.monitoring_hosts.id
+
+  description = "Allow ingress Prometheus monitoring stats ingress from monitoring group"
+
+  security_group_id = aws_security_group.emr_slave.id
+}
+
 resource "aws_security_group_rule" "emr_master_all_egress" {
   type        = "egress"
   from_port   = 0
