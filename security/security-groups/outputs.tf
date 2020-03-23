@@ -38,6 +38,46 @@ output "bastion_host_sg_vpc_id" {
   value       = aws_security_group.bastion_host.vpc_id
 }
 
+output "monitoring_hosts_sg_arn" {
+  description = "The ARN of the monitoring hosts security group"
+  value       = aws_security_group.monitoring_hosts.arn
+}
+
+output "monitoring_hosts_sg_description" {
+  description = "The description of the monitoring hosts security group"
+  value       = aws_security_group.monitoring_hosts.description
+}
+
+output "monitoring_hosts_sg_egress" {
+  description = "The egress rules for the monitoring hosts security group"
+  value       = aws_security_group.monitoring_hosts.egress
+}
+
+output "monitoring_hosts_sg_ingress" {
+  description = "The ingress rules for the monitoring hosts security group"
+  value       = aws_security_group.monitoring_hosts.ingress
+}
+
+output "monitoring_hosts_sg_id" {
+  description = "The ID of the monitoring hosts security group"
+  value       = aws_security_group.monitoring_hosts.id
+}
+
+output "monitoring_hosts_sg_name" {
+  description = "The name of the monitoring hosts security group"
+  value       = aws_security_group.monitoring_hosts.name
+}
+
+output "monitoring_hosts_sg_owner_id" {
+  description = "The owner ID of the monitoring hosts security group"
+  value       = aws_security_group.monitoring_hosts.owner_id
+}
+
+output "monitoring_hosts_sg_vpc_id" {
+  description = "The VPC ID of the monitoring hosts security group"
+  value       = aws_security_group.monitoring_hosts.vpc_id
+}
+
 output "database_sg_arn" {
   description = "The ARN of the database security group"
   value       = aws_security_group.database.arn

@@ -35,6 +35,14 @@ resource "aws_security_group" "bastion_host" {
   tags = var.tags
 }
 
+resource "aws_security_group" "monitoring_hosts" {
+  name        = "${var.name_prefix}-monitoring-hosts"
+  description = "Security group for monitoring hosts"
+  vpc_id      = var.mgmt_vpc_id
+
+  tags = var.tags
+}
+
 resource "aws_security_group" "imputation_lb" {
   name        = "${var.name_prefix}-imputation-lb"
   description = "Security group for the front-end load balancer"
@@ -105,6 +113,44 @@ resource "aws_security_group_rule" "bastion_host_all_egress" {
   cidr_blocks = ["0.0.0.0/0"]
 
   security_group_id = aws_security_group.bastion_host.id
+}
+
+# ----------------------------------------------------------------------------------------------------------------------
+# CREATE BASTION-HOST SECURITY GROUP RULES
+# ----------------------------------------------------------------------------------------------------------------------
+
+resource "aws_security_group_rule" "monitoring_hosts_emr_master_prometheus_ingress" {
+  type                     = "ingress"
+  from_port                = "9090"
+  to_port                  = "9106"
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.emr_master.id
+
+  description = "Allow ingress Prometheus monitoring stats from EMR master security group"
+
+  security_group_id = aws_security_group.monitoring_hosts.id
+}
+
+resource "aws_security_group_rule" "monitoring_hosts_emr_slave_prometheus_ingress" {
+  type                     = "ingress"
+  from_port                = "9090"
+  to_port                  = "9106"
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.emr_slave.id
+
+  description = "Allow ingress Prometheus monitoring stats from EMR slave security group"
+
+  security_group_id = aws_security_group.monitoring_hosts.id
+}
+
+resource "aws_security_group_rule" "monitoring_hosts_all_egress" {
+  type        = "egress"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  cidr_blocks = ["0.0.0.0/0"]
+
+  security_group_id = aws_security_group.monitoring_hosts.id
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
