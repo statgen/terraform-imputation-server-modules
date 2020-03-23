@@ -49,13 +49,13 @@ variable "enable_dns_support" {
 variable "enable_nat_gateway" {
   description = "Create NAT gateways for private subnets"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "single_nat_gateway" {
   description = "Create one shared NAT gateway for all AZs"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "one_nat_gateway_per_az" {
