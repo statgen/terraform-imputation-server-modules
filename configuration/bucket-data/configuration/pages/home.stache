@@ -40,6 +40,29 @@
     </div>
 </div>
 
+<!-- News and Logos -->
+<div class="py-5 bg-light">
+	<div class="container  ">
+		<div class="card ">
+			<div class="card-body">
+				<div class="container">
+					<div class="row">
+                        <h5 style="padding-top: 10px; padding-bottom: 0px; margin-bottom: 10px;">Latest News</h5>
+                        <hr style="padding-top: 0px; margin-top: 0px;">
+                        <p>
+                            <small class="text-muted"><i class="far fa-calendar-alt"></i> 10 March 2020</small><br>
+                            Based on whole genome sequence under NHLBI's TOPMed Program, an imputation reference panel will soon be released to the community.
+                            Built from 97,256 deeply sequenced human genomes, this panel contains 308,107,085 genetic variants, and improves imputation compared to existing reference panels.
+                            The TOPMed Imputation Server is running in a cloud computing environment supported by the NHLBI BioData Catalyst program. The panel and server are currently in beta-testing.
+                            Imputation with HRC and 1000 Genome panels are still supported at <a href="https://imputationserver.sph.umich.edu">Michigan Imputation Server</a>.
+                        </p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
 <div class="bg-light py-5">
     <div class="container">
         <h2 class="text-center pb-3">Brought to you by</h2>

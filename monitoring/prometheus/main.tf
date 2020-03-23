@@ -24,28 +24,46 @@ terraform {
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
-# CREATE VPC
+# CREATE EC2 INSTANCE(S)
 # ----------------------------------------------------------------------------------------------------------------------
 
-data "aws_region" "current" {}
+data "aws_ami" "this" {
+  most_recent = true
 
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "2.17.0"
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+  }
 
-  name = "${var.name_prefix}-mgmt-vpc"
-  cidr = var.cidr_block
+  owners = ["099720109477"]
+}
 
-  azs             = ["${data.aws_region.current.name}a", "${data.aws_region.current.name}b", "${data.aws_region.current.name}c"]
-  private_subnets = var.private_subnets
-  public_subnets  = var.public_subnets
+module "ec2_instance" {
+  souce   = "terraform-aws-modules/ec2-instance/aws"
+  version = "2.13.0"
 
-  enable_dns_hostnames = var.enable_dns_hostnames
-  enable_dns_support   = var.enable_dns_support
+  instance_count = 1
 
-  enable_nat_gateway     = var.enable_nat_gateway
-  single_nat_gateway     = var.single_nat_gateway
-  one_nat_gateway_per_az = var.one_nat_gateway_per_az
+  name          = "${var.name_prefix}-mon"
+  ami           = data.aws_ami.this
+  instance_type = var.instance_type
+
+  associate_public_ip_address = false
+
+  vpc_security_group_ids = [var.monitor_sg_id]
+
+  subnet_ids = [element(var.private_subnets, 0)]
+
+  iam_instance_profile = var.monitoring_host_instance_profile_name
+
+  root_block_device = [
+    {
+      volume_type = "gp2"
+      volume_size = var.root_volume_size
+    },
+  ]
+
+  user_data = "${file("user-data/startup.sh")}"
 
   tags = var.tags
 }

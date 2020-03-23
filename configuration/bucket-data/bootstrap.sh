@@ -97,9 +97,9 @@ function configure_directories {
   minimac.window=500000
   samples.max=110000
   minimac.sendmail=yes
-  minimac.sendmail.error=pleiness+imputation@umich.edu
-  contact.name=Jacob Pleiness
-  contact.email=pleiness+imputation@umich.edu
+  minimac.sendmail.error=imputationserver@umich.edu
+  contact.name=Imputation Team
+  contact.email=imputationserver@umich.edu
   eagle.command=--vcfRef ${ref} --vcfTarget ${vcf} --geneticMapFile ${map} --outPrefix ${prefix} --bpStart ${start} --bpEnd ${end} --allowRefAltSwap --vcfOutFormat z --keepMissingPloidyX --numThreads 4
   server.url=https://topmed.imputationserver.org
 EOF

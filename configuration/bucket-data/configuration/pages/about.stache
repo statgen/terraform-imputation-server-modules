@@ -1,16 +1,29 @@
-<h2>About</h2>
-<div class="py-5">
-    <p>
-        Trans-Omics in Precision Medicine (TOPMed) program imputation panel (version)
-        supported by the National Heart, Lung and Blood Institute (NHLBI); see
-        www.nhlbiwgs.org. TOPMed study investigators contributed data to the reference
-        panel, which can be accessed through the Michigan Imputation Server; see
-        https://imputationserver.sph.umich.edu. The panel was constructed and
-        implemented by the TOPMed Informatics Research Center at the University of
-        Michigan (3R01HL-117626-02S1; contract HHSN268201800002I). The TOPMed Data
-        Coordinating Center (3R01HL-120393-02S1; contract HHSN268201800001I) provided
-        additional data management, sample identity checks, and overall program
-        coordination and support. We gratefully acknowledge the studies and
-        participants who provided biological samples and data for TOPMed.
-    </p>
-</div>
+<h1 id="about">About</h1>
+<h2 id="genotype-imputation">Genotype Imputation</h2>
+<p>Genotype imputation is a key component of genetic association studies, where it increases power, facilitates meta-analysis, and aids interpretation of signals. This imputation server allows registered users to perform genotype imputation for their own samples. Typically, this allows tens of millions of genetic variants to be genotyped with very high-fidelity in samples that have been genotyped with an affordable genotyping array. Imputation works by comparing short stretches of an individual genome to stretches of previously characterized genomes. Since all humans are related, this process can typically and accurately reconstruct much of the missing data in each genome.  </p>
+<h2 id="the-topmed-imputation-panel-and-server">The TOPMed Imputation Panel and Server</h2>
+<p>The TOPMed Imputation Reference panel is a diverse reference panel including information from 97,256 deeply sequenced human genomes. The panel is available to the community through a collaboration between TOPMed Study Investigators, the National Heart Lung and Blood Institute and the University of Michigan Imputation Server team.</p>
+<h3 id="the-topmed-study">The TOPMed Study</h3>
+<p>The Trans-Omics for Precision Medicine (TOPMed) program seeks to elucidate the genetic architecture and disease biology of heart, lung, blood, and sleep disorders, with the ultimate goal of improving diagnosis, treatment, and prevention. The initial phases of the program included whole genome sequencing of individuals with rich phenotypic data and diverse backgrounds. This reference panel is built on a subset of 97,256 TOPMed samples for whom high quality whole genome sequence data was available and for where contributing studies approved this use of the data, taking into account both the limited risks associated with including a sample in an imputation reference panel that is only available through this imputation server and also other study and sample specific use restrictions. </p>
+<p>Version r2 of the panel, which is the first version available to the scientific community at large, includes 97,256 reference samples and 308,107,085 genetic variants distributed across the 22 autosomes and the X chromosome.</p>
+<p>For a more detailed description of the study, see the TOPMed pre-print currently on BioXriv <a href="https://www.biorxiv.org/content/10.1101/563866v1">Taliun, D. et al. (2019) Sequencing of 53,831 diverse genomes from the NHLBI TOPMed Program. Biorxiv, doi:10.1101/563866</a>.</p>
+<h3 id="the-michigan-imputation-server">The Michigan Imputation Server</h3>
+<p>The Michigan Imputation Server is a joint of effort of the statistical genetics teams at the University of Michigan in the U.S.A. and at the University of Innsbruck in Italy. The Michigan Imputation Server technology provides a web-based service for imputation that facilitates access to imputation reference panels and greatly improves user experience and productivity. The server maintains a private list of reference genomes, which are not directly accessible by panel users. Users can request imputation of their own samples and securely download the results. </p>
+<p>For information on imputation server technology, please see:</p>
+<ul>
+<li>Imputation Server -- <a href="http://dx.doi.org/10.1038/ng.3656">Das, S., Forer, L., Schönherr, S., Sidore, C., Locke, A. E., Kwong, A., Vrieze, S. I., Chew, E. Y., Levy, S., McGue, M., Schlessinger, D., Stambolian, D., Loh, P.-R., Iacono, W. G., Swaroop, A., Scott, L. J., Cucca, F., Kronenberg, F., Boehnke, M., … Fuchsberger, C. (2016). Next-generation genotype imputation service and methods. Nature Genetics, 48(10), 1284–1287. </a></li>
+<li>Eagle Haplotype Phasing -- <a href="http://dx.doi.org/10.1038/ng.3679">Loh, P.-R., Danecek, P., Palamara, P. F., Fuchsberger, C., A Reshef, Y., K Finucane, H., Schoenherr, S., Forer, L., McCarthy, S., Abecasis, G. R., Durbin, R., &amp; L Price, A. (2016). Reference-based phasing using the Haplotype Reference Consortium panel. Nature Genetics, 48(11), 1443–1448.</a></li>
+<li>Minimac Imputation -- <a href="https://doi.org/10.1093/bioinformatics/btu704">Fuchsberger, C., Abecasis, G. R., &amp; Hinds, D. A. (2014). minimac2: faster genotype imputation. Bioinformatics, 31(5), 782–784.</a></li>
+</ul>
+<h3 id="the-national-heart-lung-and-blood-institute">The National Heart Lung and Blood Institute</h3>
+<p>The National Heart Lung and Blood Institute is part of the National Institutes of Health and has provided key support to the development of the studies that collectively constitute the TOPMed Program. The Institute has also sponsored the sequencing and analysis of whole genome sequence and other data within the TOPMed program. NHLBI is sponsoring this imputation server and providing underlying compute resources through it&#39;s BioDataCatalyst program.</p>
+<h2 id="citation">Citation</h2>
+<p>If you use the Imputation Server in your work, please cite:</p>
+<ul>
+<li>TOPMed Study -- <a href="https://www.biorxiv.org/content/10.1101/563866v1">Taliun, D. et al. (2019) Sequencing of 53,831 diverse genomes from the NHLBI TOPMed Program. Biorxiv, doi:10.1101/563866</a></li>
+<li>Imputation Server -- <a href="http://dx.doi.org/10.1038/ng.3656">Das, S., Forer, L., Schönherr, S., Sidore, C., Locke, A. E., Kwong, A., Vrieze, S. I., Chew, E. Y., Levy, S., McGue, M., Schlessinger, D., Stambolian, D., Loh, P.-R., Iacono, W. G., Swaroop, A., Scott, L. J., Cucca, F., Kronenberg, F., Boehnke, M., … Fuchsberger, C. (2016). Next-generation genotype imputation service and methods. Nature Genetics, 48(10), 1284–1287. </a></li>
+<li>Minimac Imputation -- <a href="https://doi.org/10.1093/bioinformatics/btu704">Fuchsberger, C., Abecasis, G. R., &amp; Hinds, D. A. (2014). minimac2: faster genotype imputation. Bioinformatics, 31(5), 782–784.</a></li>
+</ul>
+<h2 id="acknowledgement">Acknowledgement</h2>
+<p>Please use the following acknowledgment:</p>
+<p>The TOPMed Reference panel was constructed and implemented by the TOPMed Informatics Research Center at the University of Michigan (3R01HL-117626-02S1; contract HHSN268201800002I). The TOPMed Data Coordinating Center (3R01HL-120393-02S1; contract HHSN268201800001I) provided additional data management, sample identity checks, and overall program coordination and support. We gratefully acknowledge the studies and participants who provided leadership, intellectual support, biological samples and data for TOPMed.</p>
