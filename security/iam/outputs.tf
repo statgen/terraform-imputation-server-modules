@@ -43,6 +43,36 @@ output "bastion_host_instance_profile_role" {
   value       = aws_iam_instance_profile.bastion_host.role
 }
 
+output "monitoring_role_arn" {
+  description = "The ARN of the monitoring role"
+  value       = aws_iam_role.monitoring_hosts.arn
+}
+
+output "monitoring_role_id" {
+  description = "The ID of the monitoring role"
+  value       = aws_iam_role.monitoring_hosts.id
+}
+
+output "monitoring_role_name" {
+  description = "The name of the monitoring role"
+  value       = aws_iam_role.monitoring_hosts.name
+}
+
+output "monitoring_instance_profile_arn" {
+  description = "The ARN of the monitoring instance profile"
+  value       = aws_iam_instance_profile.monitoring_hosts.arn
+}
+
+output "monitoring_instance_profile_name" {
+  description = "The name of the monitoring instance profile"
+  value       = aws_iam_instance_profile.monitoring_hosts.name
+}
+
+output "monitoring_instance_profile_role" {
+  description = "The role assigned to the monitoring instance profile"
+  value       = aws_iam_instance_profile.monitoring_hosts.role
+}
+
 output "lambda_edge_role_id" {
   description = "The ID of the Lambda Edge role"
   value       = aws_iam_role.lambda_edge.id

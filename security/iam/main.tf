@@ -104,6 +104,27 @@ resource "aws_iam_role_policy_attachment" "flowlogs_cloudwatch" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# CREATE ROLES FOR MONITORING INSTANCE(S)
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_iam_role" "monitoring_hosts" {
+  name               = "MonitoringHosts"
+  assume_role_policy = data.aws_iam_policy_document.allow_ec2_access.json
+
+  tags = var.tags
+}
+
+resource "aws_iam_instance_profile" "monitoring_hosts" {
+  name = aws_iam_role.monitoring_hosts.name
+  role = aws_iam_role.monitoring_hosts.name
+}
+
+resource "aws_iam_role_policy_attachment" "monitoring_ssm" {
+  role       = aws_iam_role.monitoring_hosts.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # CREATE ROLES FOR EMR CLUSTER
 # ---------------------------------------------------------------------------------------------------------------------
 
