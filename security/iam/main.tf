@@ -124,6 +124,11 @@ resource "aws_iam_role_policy_attachment" "monitoring_ssm" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+resource "aws_iam_role_policy_attachment" "monitoring_read_only_ec2" {
+  role       = aws_iam_role.monitoring_hosts.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+}
+
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE ROLES FOR EMR CLUSTER
 # ---------------------------------------------------------------------------------------------------------------------
