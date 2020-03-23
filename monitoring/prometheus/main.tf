@@ -38,19 +38,20 @@ data "aws_ami" "this" {
   owners = ["099720109477"]
 }
 
+
 module "ec2_instance" {
-  souce   = "terraform-aws-modules/ec2-instance/aws"
+  source  = "terraform-aws-modules/ec2-instance/aws"
   version = "2.13.0"
 
   instance_count = 1
 
   name          = "${var.name_prefix}-mon"
-  ami           = data.aws_ami.this
+  ami           = data.aws_ami.this.id
   instance_type = var.instance_type
 
   associate_public_ip_address = false
 
-  vpc_security_group_ids = [var.monitor_sg_id]
+  vpc_security_group_ids = [var.monitoring_sg_id]
 
   subnet_ids = [element(var.private_subnets, 0)]
 
@@ -63,7 +64,7 @@ module "ec2_instance" {
     },
   ]
 
-  user_data = "${file("user-data/startup.sh")}"
+  # user_data = "${file("user-data/startup.sh")}"
 
   tags = var.tags
 }

@@ -19,16 +19,16 @@ variable "name_prefix" {
 variable "instance_type" {
   description = "EC2 instance type for monitoring hosts"
   type        = string
-  default     = "t2.micro"
+  default     = "m5a.xlarge"
 }
 
 variable "root_volume_size" {
   description = "Root volume size for monitoring hosts in GB"
   type        = string
-  default     = "64"
+  default     = "500"
 }
 
-variable "monitor_sg_id" {
+variable "monitoring_sg_id" {
   description = "The security group ID monitoring hosts"
   type        = string
   default     = null
