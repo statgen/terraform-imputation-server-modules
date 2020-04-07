@@ -1,0 +1,47 @@
+{
+    "variables": {
+        "aws_access_key": "",
+        "aws_region": "",
+        "aws_secret_key": "",
+        "script_path": "bootstrap.sh"
+    },
+    "builders": [{
+        "type": "amazon-ebs",
+        "access_key": "{{user `aws_access_key`}}",
+        "secret_key": "{{user `aws_secret_key`}}",
+        "region": "{{user `aws_region`}}",
+        "ami_name": "monitoring-server-{{isotime \"20060102-030405\"}}",
+        "ami_description": "Base AMI for monitoring instances",
+        "encrypt_boot": true,
+        "source_ami_filter": {
+            "filters": {
+                "virtualization-type": "hvm",
+                "name": "ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*",
+                "root-device-type": "ebs"
+            },
+            "owners": ["099720109477"],
+            "most_recent": true
+        },
+        "instance_type": "m5a.xlarge",
+        "ssh_username": "ubuntu",
+        "tags": {
+            "Name": "monitoring-server-base"
+        }
+    }],
+    "provisioners": [{
+        "type": "file",
+        "source": "node_exporter.service",
+        "destination": "/tmp/node_exporter.service"
+    },{
+        "type": "file",
+        "source": "prometheus.service",
+        "destination": "/tmp/prometheus.service"
+    },{
+        "type": "file",
+        "source": "prometheus.yml",
+        "destination": "/tmp/prometheus.yml"
+    },{
+        "type": "shell",
+        "script": "{{user `script_path`}}"
+    }]
+}
