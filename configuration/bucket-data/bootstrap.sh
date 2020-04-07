@@ -12,6 +12,8 @@ readonly IMPUTATION_SERVER_VERSION="1.2.7"
 readonly CLOUDGENE_VERSION="2.1.3"
 readonly IMPUTATION_SERVER_BUCKET="nih-nhlbi-imputation-server"
 
+readonly SCRIPT_NAME="$(basename "$0")"
+
 function log {
   local -r level="$1"
   local -r message="$2"
@@ -95,13 +97,13 @@ function configure_directories {
   chunksize=10000000
   phasing.window=5000000
   minimac.window=500000
-  samples.max=110000
+  samples.max=25000
   minimac.sendmail=yes
   minimac.sendmail.error=imputationserver@umich.edu
   contact.name=Imputation Team
   contact.email=imputationserver@umich.edu
   eagle.command=--vcfRef ${ref} --vcfTarget ${vcf} --geneticMapFile ${map} --outPrefix ${prefix} --bpStart ${start} --bpEnd ${end} --allowRefAltSwap --vcfOutFormat z --keepMissingPloidyX --numThreads 4
-  server.url=https://topmed.imputationserver.org
+  server.url=https://imputation.biodatacatalyst.nhlbi.nih.gov
 EOF
 }
 
