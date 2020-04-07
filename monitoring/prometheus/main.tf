@@ -20,7 +20,7 @@ terraform {
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = "= 0.12.23"
+  required_version = "= 0.12.24"
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -32,10 +32,10 @@ data "aws_ami" "this" {
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
+    values = ["monitoring-server-*"]
   }
 
-  owners = ["099720109477"]
+  owners = ["017117783718"]
 }
 
 
