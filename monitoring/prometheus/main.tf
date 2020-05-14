@@ -35,7 +35,7 @@ data "aws_ami" "this" {
     values = ["monitoring-server-*"]
   }
 
-  owners = ["017117783718"]
+  owners = ["536148068215"]
 }
 
 

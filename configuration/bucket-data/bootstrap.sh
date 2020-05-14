@@ -8,8 +8,8 @@ exec 2>&1
 # if any command or pipeline returns non-zero exit status.
 set -eo pipefail
 
-readonly IMPUTATION_SERVER_VERSION="1.2.7"
-readonly CLOUDGENE_VERSION="2.1.3"
+readonly IMPUTATION_SERVER_VERSION="1.3.3"
+readonly CLOUDGENE_VERSION="2.2.0"
 readonly IMPUTATION_SERVER_BUCKET="nih-nhlbi-imputation-server"
 
 readonly SCRIPT_NAME="$(basename "$0")"

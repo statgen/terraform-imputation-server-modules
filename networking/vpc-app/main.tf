@@ -141,16 +141,16 @@ resource "aws_route" "vpc_peering_route_mgmt_vpc_private0" {
   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
 }
 
-resource "aws_route" "vpc_peering_route_mgmt_vpc_private1" {
-  count                     = 3
-  route_table_id            = var.peer_vpc_private_route_table_ids[1]
-  destination_cidr_block    = module.vpc.private_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# resource "aws_route" "vpc_peering_route_mgmt_vpc_private1" {
+#   count                     = 3
+#   route_table_id            = var.peer_vpc_private_route_table_ids[1]
+#   destination_cidr_block    = module.vpc.private_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
-resource "aws_route" "vpc_peering_route_mgmt_vpc_private2" {
-  count                     = 3
-  route_table_id            = var.peer_vpc_private_route_table_ids[2]
-  destination_cidr_block    = module.vpc.private_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# resource "aws_route" "vpc_peering_route_mgmt_vpc_private2" {
+#   count                     = 3
+#   route_table_id            = var.peer_vpc_private_route_table_ids[2]
+#   destination_cidr_block    = module.vpc.private_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
