@@ -31,7 +31,7 @@ data "aws_ami" "this" {
   most_recent = true
 
   filter {
-    name   = "name"
+    name   = "ami-name"
     values = ["monitoring-server-*"]
   }
 
@@ -63,8 +63,6 @@ module "ec2_instance" {
       volume_size = var.root_volume_size
     },
   ]
-
-  # user_data = "${file("user-data/startup.sh")}"
 
   tags = var.tags
 }

@@ -2,7 +2,7 @@
 
 set -e
 
-readonly PROMETHEUS_VERSION="2.16.0"
+readonly PROMETHEUS_VERSION="2.18.1"
 readonly NODE_EXPORTER_VERSION="0.18.1"
 
 readonly SCRIPT_NAME="$(basename "$0")"
