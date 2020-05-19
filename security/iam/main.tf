@@ -24,24 +24,6 @@ terraform {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# CREATE FULL-ACCESS GROUP AND ATTACH POLICY
-# ---------------------------------------------------------------------------------------------------------------------
-
-# resource "aws_iam_group" "full_access" {
-#   name = "full-access"
-# }
-
-# resource "aws_iam_group_policy_attachment" "force_mfa" {
-#   group      = aws_iam_group.full_access.name
-#   policy_arn = aws_iam_policy.force_mfa.arn
-# }
-
-# resource "aws_iam_group_policy_attachment" "full_access" {
-#   group      = aws_iam_group.full_access.name
-#   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-# }
-
-# ---------------------------------------------------------------------------------------------------------------------
 # CREATE ROLE AND INSTANCE PROFILE FOR BASTION HOST
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -49,6 +31,8 @@ resource "aws_iam_role" "bastion_host" {
   name               = "BastionHostRole"
   description        = "Delegate permissions for Bastion Host"
   assume_role_policy = data.aws_iam_policy_document.allow_ec2_access.json
+
+  tags = var.tags
 }
 
 resource "aws_iam_instance_profile" "bastion_host" {
@@ -75,6 +59,8 @@ resource "aws_iam_role" "lambda_edge" {
   name               = "LambdaEdgeRole"
   description        = "Delegate permissions for Lambda@Edge functions"
   assume_role_policy = data.aws_iam_policy_document.allow_lambda_access.json
+
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basics" {
@@ -90,6 +76,8 @@ resource "aws_iam_role" "flowlogs_cloudwatch" {
   name               = "FlowLogsCloudwatchDeliveryRole"
   description        = "Delegate permissions for Flowlogs to push logs to CloudWatch"
   assume_role_policy = data.aws_iam_policy_document.flowlogs_trust.json
+
+  tags = var.tags
 }
 
 resource "aws_iam_policy" "flowlogs_cloudwatch" {
