@@ -146,7 +146,7 @@ output "vpc_name" {
 # VPC PEERING CONNECTION OUTPUTS
 # ---------------------------------------------------------------------------------------------------------------------
 
-output "vpc_peering_connection_id" {
-  description = "The ID of the VPC Peering Connection"
-  value       = aws_vpc_peering_connection.this.id
-}
+# output "vpc_peering_connection_id" {
+#   description = "The ID of the VPC Peering Connection"
+#   value       = aws_vpc_peering_connection.this.id
+# }
