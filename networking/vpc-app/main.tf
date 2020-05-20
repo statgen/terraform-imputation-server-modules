@@ -31,7 +31,7 @@ data "aws_region" "current" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.15.0"
+  version = "2.33.0"
 
   name = "${var.name_prefix}-app-vpc"
   cidr = var.cidr_block
@@ -62,84 +62,84 @@ module "vpc" {
 # CREATE VPC PEERING
 # ----------------------------------------------------------------------------------------------------------------------
 
-locals {
-  tags = "${map("Name", "VPC Peering between ${var.peer_vpc_name} and ${module.vpc.name}")}"
-}
+# locals {
+#   tags = "${map("Name", "VPC Peering between ${var.peer_vpc_name} and ${module.vpc.name}")}"
+# }
 
-resource "aws_vpc_peering_connection" "this" {
-  peer_vpc_id = var.peer_vpc_id
-  vpc_id      = module.vpc.vpc_id
-  auto_accept = true
+# resource "aws_vpc_peering_connection" "this" {
+#   peer_vpc_id = var.peer_vpc_id
+#   vpc_id      = module.vpc.vpc_id
+#   auto_accept = true
 
-  accepter {
-    allow_remote_vpc_dns_resolution = true
-  }
+#   accepter {
+#     allow_remote_vpc_dns_resolution = true
+#   }
 
-  requester {
-    allow_remote_vpc_dns_resolution = true
-  }
+#   requester {
+#     allow_remote_vpc_dns_resolution = true
+#   }
 
-  tags = merge(local.tags, var.tags)
-}
+#   tags = merge(local.tags, var.tags)
+# }
 
-# Update route tables for VPC peering
-## Create route tables between mgmt VPC public subnets and this VPC private subnets
-resource "aws_route" "vpc_peering_route_this_vpc0" {
-  count                     = 3
-  route_table_id            = module.vpc.private_route_table_ids[0]
-  destination_cidr_block    = var.peer_vpc_public_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# # Update route tables for VPC peering
+# ## Create route tables between mgmt VPC public subnets and this VPC private subnets
+# resource "aws_route" "vpc_peering_route_this_vpc0" {
+#   count                     = 3
+#   route_table_id            = module.vpc.private_route_table_ids[0]
+#   destination_cidr_block    = var.peer_vpc_public_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
-resource "aws_route" "vpc_peering_route_this_vpc1" {
-  count                     = 3
-  route_table_id            = module.vpc.private_route_table_ids[1]
-  destination_cidr_block    = var.peer_vpc_public_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# resource "aws_route" "vpc_peering_route_this_vpc1" {
+#   count                     = 3
+#   route_table_id            = module.vpc.private_route_table_ids[1]
+#   destination_cidr_block    = var.peer_vpc_public_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
-resource "aws_route" "vpc_peering_route_this_vpc2" {
-  count                     = 3
-  route_table_id            = module.vpc.private_route_table_ids[2]
-  destination_cidr_block    = var.peer_vpc_public_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# resource "aws_route" "vpc_peering_route_this_vpc2" {
+#   count                     = 3
+#   route_table_id            = module.vpc.private_route_table_ids[2]
+#   destination_cidr_block    = var.peer_vpc_public_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
-resource "aws_route" "vpc_peering_route_mgmt_vpc0" {
-  count                     = 3
-  route_table_id            = var.peer_vpc_public_route_table_ids[0]
-  destination_cidr_block    = module.vpc.private_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# resource "aws_route" "vpc_peering_route_mgmt_vpc0" {
+#   count                     = 3
+#   route_table_id            = var.peer_vpc_public_route_table_ids[0]
+#   destination_cidr_block    = module.vpc.private_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
-## Create route tables between mgmt VPC private subnets and this VPC private subnets
-resource "aws_route" "vpc_peering_route_this_vpc_private0" {
-  count                     = 3
-  route_table_id            = module.vpc.private_route_table_ids[0]
-  destination_cidr_block    = var.peer_vpc_private_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# ## Create route tables between mgmt VPC private subnets and this VPC private subnets
+# resource "aws_route" "vpc_peering_route_this_vpc_private0" {
+#   count                     = 3
+#   route_table_id            = module.vpc.private_route_table_ids[0]
+#   destination_cidr_block    = var.peer_vpc_private_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
-resource "aws_route" "vpc_peering_route_this_vpc_private1" {
-  count                     = 3
-  route_table_id            = module.vpc.private_route_table_ids[1]
-  destination_cidr_block    = var.peer_vpc_private_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# resource "aws_route" "vpc_peering_route_this_vpc_private1" {
+#   count                     = 3
+#   route_table_id            = module.vpc.private_route_table_ids[1]
+#   destination_cidr_block    = var.peer_vpc_private_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
-resource "aws_route" "vpc_peering_route_this_vpc_private2" {
-  count                     = 3
-  route_table_id            = module.vpc.private_route_table_ids[2]
-  destination_cidr_block    = var.peer_vpc_private_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# resource "aws_route" "vpc_peering_route_this_vpc_private2" {
+#   count                     = 3
+#   route_table_id            = module.vpc.private_route_table_ids[2]
+#   destination_cidr_block    = var.peer_vpc_private_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
-resource "aws_route" "vpc_peering_route_mgmt_vpc_private0" {
-  count                     = 3
-  route_table_id            = var.peer_vpc_private_route_table_ids[0]
-  destination_cidr_block    = module.vpc.private_subnets_cidr_blocks[count.index]
-  vpc_peering_connection_id = aws_vpc_peering_connection.this.id
-}
+# resource "aws_route" "vpc_peering_route_mgmt_vpc_private0" {
+#   count                     = 3
+#   route_table_id            = var.peer_vpc_private_route_table_ids[0]
+#   destination_cidr_block    = module.vpc.private_subnets_cidr_blocks[count.index]
+#   vpc_peering_connection_id = aws_vpc_peering_connection.this.id
+# }
 
 # resource "aws_route" "vpc_peering_route_mgmt_vpc_private1" {
 #   count                     = 3
