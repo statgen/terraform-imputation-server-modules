@@ -31,7 +31,7 @@ data "aws_region" "current" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.17.0"
+  version = "2.33.0"
 
   name = "${var.name_prefix}-mgmt-vpc"
   cidr = var.cidr_block
