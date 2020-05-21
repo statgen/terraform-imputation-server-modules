@@ -33,7 +33,7 @@ module "transit-gateway" {
 
   name = "${var.name_prefix}-tgw"
 
-  enable_auto_accept_shared_attachments = true
+  share_tgw = false
 
   vpc_attachments = {
     vpc1 = {
