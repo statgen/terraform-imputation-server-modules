@@ -120,11 +120,12 @@ resource "aws_security_group_rule" "bastion_host_all_egress" {
 # ----------------------------------------------------------------------------------------------------------------------
 
 resource "aws_security_group_rule" "monitoring_hosts_emr_master_prometheus_ingress" {
-  type                     = "ingress"
-  from_port                = "9090"
-  to_port                  = "9106"
-  protocol                 = "tcp"
-  source_security_group_id = aws_security_group.emr_master.id
+  type      = "ingress"
+  from_port = "9090"
+  to_port   = "9106"
+  protocol  = "tcp"
+  # source_security_group_id = aws_security_group.emr_master.id
+  cidr_blocks = var.app_vpc_private_subnets_cidr
 
   description = "Allow ingress Prometheus monitoring stats from EMR master security group"
 
@@ -132,11 +133,12 @@ resource "aws_security_group_rule" "monitoring_hosts_emr_master_prometheus_ingre
 }
 
 resource "aws_security_group_rule" "monitoring_hosts_emr_slave_prometheus_ingress" {
-  type                     = "ingress"
-  from_port                = "9090"
-  to_port                  = "9106"
-  protocol                 = "tcp"
-  source_security_group_id = aws_security_group.emr_slave.id
+  type      = "ingress"
+  from_port = "9090"
+  to_port   = "9106"
+  protocol  = "tcp"
+  # source_security_group_id = aws_security_group.emr_slave.id
+  cidr_blocks = var.app_vpc_private_subnets_cidr
 
   description = "Allow ingress Prometheus monitoring stats from EMR slave security group"
 
@@ -174,11 +176,12 @@ resource "aws_security_group_rule" "mysql_ingress" {
 # ----------------------------------------------------------------------------------------------------------------------
 
 resource "aws_security_group_rule" "emr_master_ssh_ingress" {
-  type                     = "ingress"
-  from_port                = 22
-  to_port                  = 22
-  protocol                 = "tcp"
-  source_security_group_id = aws_security_group.bastion_host.id
+  type      = "ingress"
+  from_port = 22
+  to_port   = 22
+  protocol  = "tcp"
+  #source_security_group_id = aws_security_group.bastion_host.id
+  cidr_blocks = mgmt_vpc_private_subnets_cidr
 
   description = "Allow ingress SSH from bastion host"
 
@@ -198,11 +201,12 @@ resource "aws_security_group_rule" "emr_master_imputation_ingress" {
 }
 
 resource "aws_security_group_rule" "emr_master_prometheus_ingress" {
-  type                     = "ingress"
-  from_port                = "9090"
-  to_port                  = "9106"
-  protocol                 = "tcp"
-  source_security_group_id = aws_security_group.monitoring_hosts.id
+  type      = "ingress"
+  from_port = "9090"
+  to_port   = "9106"
+  protocol  = "tcp"
+  # source_security_group_id = aws_security_group.monitoring_hosts.id
+  cidr_blocks = mgmt_vpc_private_subnets_cidr
 
   description = "Allow ingress Prometheus monitoring stats ingress from monitoring group"
 
@@ -210,11 +214,12 @@ resource "aws_security_group_rule" "emr_master_prometheus_ingress" {
 }
 
 resource "aws_security_group_rule" "emr_slave_prometheus_ingress" {
-  type                     = "ingress"
-  from_port                = "9090"
-  to_port                  = "9106"
-  protocol                 = "tcp"
-  source_security_group_id = aws_security_group.monitoring_hosts.id
+  type      = "ingress"
+  from_port = "9090"
+  to_port   = "9106"
+  protocol  = "tcp"
+  # source_security_group_id = aws_security_group.monitoring_hosts.id
+  cidr_blocks = mgmt_vpc_private_subnets_cidr
 
   description = "Allow ingress Prometheus monitoring stats ingress from monitoring group"
 

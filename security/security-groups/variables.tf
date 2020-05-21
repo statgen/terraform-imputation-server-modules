@@ -22,9 +22,21 @@ variable "app_vpc_id" {
   default     = null
 }
 
+variable "app_vpc_private_subnets_cidr" {
+  description = "List of CIDR blocks for private subnets in app VPC"
+  type        = list(string)
+  default     = null
+}
+
 variable "mgmt_vpc_id" {
   description = "The VPC ID of the managemnt VPC"
   type        = string
+  default     = null
+}
+
+variable "mgmt_vpc_private_subnets_cidr" {
+  description = "List of CIDR blocks for private subnets in mgmt VPC"
+  type        = list(string)
   default     = null
 }
 
