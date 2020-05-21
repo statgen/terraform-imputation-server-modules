@@ -22,6 +22,12 @@ variable "domain" {
   default     = null
 }
 
+variable "enable_https" {
+  description = "Enable HTTPS on ELB"
+  type        = bool
+  default     = false
+}
+
 variable "lb_security_group" {
   description = "security group for ELB"
   type        = string

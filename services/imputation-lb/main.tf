@@ -43,7 +43,7 @@ module "imputation-lb" {
   master_node_id  = var.master_node_id
   certificate_arn = data.aws_acm_certificate.this.arn
 
-  enable_https = true
+  enable_https = var.enable_https
 
   tags = var.tags
 }
