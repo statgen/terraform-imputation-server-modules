@@ -10,6 +10,30 @@ variable "aws_account_id" {
   default     = null
 }
 
+variable "app_vpc_cidr_block" {
+  description = "The CIDR block for the APP VPC"
+  type        = string
+  default     = null
+}
+
+variable "app_vpc_route_table_ids" {
+  description = "A list of route table IDs for the APP VPC private subnets"
+  type        = list(string)
+  default     = null
+}
+
+variable "mgmt_vpc_cidr_block" {
+  description = "The CIDR block for the MGMT VPC"
+  type        = string
+  default     = null
+}
+
+variable "mgmt_vpc_route_table_id" {
+  description = "The route table ID for the MGMT VPC private subnets"
+  type        = string
+  default     = null
+}
+
 variable "name_prefix" {
   description = "A name prefix used in resource names"
   type        = string
