@@ -68,6 +68,6 @@ resource "aws_route" "mgmt_vpc_to_app_vpc" {
 resource "aws_route" "app_vpc_to_mgmt_vpc" {
   count                  = 3
   route_table_id         = var.app_vpc_route_table_ids[count.index]
-  destination_cidr_block = var.app_vpc_cidr_block
+  destination_cidr_block = var.mgmt_vpc_cidr_block
   transit_gateway_id     = module.transit_gateway.this_ec2_transit_gateway_id
 }
