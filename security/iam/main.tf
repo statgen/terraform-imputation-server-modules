@@ -20,7 +20,42 @@ terraform {
 
   # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
   # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = "= 0.12.26"
+  required_version = "= 0.12.28"
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE GROUP AND ROLE FOR ADMIN PERMISSIONS
+# ---------------------------------------------------------------------------------------------------------------------
+
+## Create "umich_admin" IAM group
+resource "aws_iam_group" "um_admin" {
+  name = "umich_admin"
+}
+
+## Create "UMAdminRole"
+resource "aws_iam_role" "um_admin" {
+  name = "UMAdminRole"
+  description = "Allow Admin access for UM Admins"
+
+  tags = var.tags
+}
+
+## Attach trust policy to role to only allow users from "um_admin" group to assume
+resource "aws_iam_role_policy_attachment" "um_admin_trust" {
+  role = aws_iam_role.um_admin.name
+  policy_arn = aws_iam_policy_document.um_admin_role_trust.arn
+}
+
+## Attach AdministratorAccess policy to UMAdmin role
+resource "aws_iam_role_policy_attachment" "um_admin" {
+  role = aws_iam_role.um_admin.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
+}
+
+## Attach IAM policy to allow group to assume role
+resource "aws_iam_role_group_policy_attachment" "um_admin_assume" {
+  group = aws_iam_group.um_admin.name
+  policy_arn = aws_iam_policy_document.um_admin_role_assume.arn
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

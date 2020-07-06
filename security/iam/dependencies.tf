@@ -116,6 +116,35 @@ data "aws_iam_policy_document" "force_mfa" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# UMADMIN ROLE POLICY DOCUMENT
+# ---------------------------------------------------------------------------------------------------------------------
+
+data "aws_iam_policy_document" "um_admin_role_assume" {
+  statement {
+    sid = "AllowUMAdminAssumeRole"
+    effect = "Allow"
+
+    resources = [aws_iam_role.um_admin.arn]
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+data "aws_iam_policy_document" "um_admin_role_trust" {
+  statement {
+    sid = "TrustUMAdminGroupAssumeRole"
+    effect = "Allow"
+
+    principals {
+      type = "AWS"
+      identifiers = [aws_iam_group.um_admin.arn]
+    }
+
+    actions = ["sts:AssumeRole"]
+  }
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # BASTION HOST POLICY DOCUMENT
 # ---------------------------------------------------------------------------------------------------------------------
 
