@@ -1,3 +1,8 @@
+output "imputation_server_bucket_id" {
+  description = "The name of the S3 bucket used for Imputation Server"
+  value = aws_s3_bucket.imputation_server.id
+}
+
 output "this_kms_key_id" {
   description = "The globally unique identifier for the AWS KMS key used for log buckets"
   value       = aws_kms_key.this.key_id
