@@ -3,10 +3,15 @@
         "aws_access_key": "",
         "aws_region": "",
         "aws_secret_key": "",
-        "script_path": "bootstrap.sh"
+        "script_path": "bootstrap.sh",
+        "subnet_id": "subnet-093605eb850e61c57",
+        "vpc_id": "vpc-0b0b9d49525f5261b"
     },
     "builders": [{
         "type": "amazon-ebs",
+        "vpc_id": "{{user `vpc_id`}}",
+        "subnet_id": "{{user `subnet_id`}}",
+        "associate_public_ip_address": true,
         "access_key": "{{user `aws_access_key`}}",
         "secret_key": "{{user `aws_secret_key`}}",
         "region": "{{user `aws_region`}}",
