@@ -27,6 +27,24 @@ terraform {
 # CREATE DOMAIN IDENTITY
 # ---------------------------------------------------------------------------------------------------------------------
 
-resource "aws_ses_domain_identity" "dev" {
-  domain = var.dev_domain
+resource "aws_ses_domain_identity" "this" {
+  domain = var.domain
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# GET DOMAIN VERIFICATION
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_ses_domain_identity_verification" "this" {
+  domain = aws_ses_domain_identity.this.id
+}
+
+
+# ---------------------------------------------------------------------------------------------------------------------
+# GET DOMAIN DKIM
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_ses_domain_dkim" "this" {
+  domain = aws_ses_domain_identity.this.domain
 }

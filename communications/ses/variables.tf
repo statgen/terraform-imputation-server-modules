@@ -10,7 +10,7 @@ variable "aws_account_id" {
   default     = null
 }
 
-variable "dev_domain" {
+variable "domain" {
   description = "The domain to be used for SES identity"
   type        = string
   default     = null
