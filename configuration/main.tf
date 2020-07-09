@@ -28,27 +28,60 @@ terraform {
 # ---------------------------------------------------------------------------------------------------------------------
 
 locals {
-    data_path = "bucket-data"
-    bootstrap_path = "${local.data_path}/bootstrap.sh"
-    apps_file_path = "${local.data_path}/apps.yaml"
+  data_path           = "bucket-data"
+  bootstrap_path      = "${local.data_path}/bootstrap.sh"
+  apps_file_path      = "${local.data_path}/apps.yaml"
+  settings_file_path  = "${local.data_path}/settings.yaml"
+  cloudgene_conf_path = "${local.data_path}/cloudgene.conf"
+  clougene_aws_path   = "${local.data_path}/cloudgene-aws"
 }
 
 resource "aws_s3_bucket_object" "bootstrap_script" {
-    bucket = var.bucket_name
-    key = "bootstrap.sh"
-    source = local.bootstrap_path
+  bucket = var.bucket_name
+  key    = "bootstrap.sh"
+  source = local.bootstrap_path
 
-    etag = "${filemd5(local.bootstrap_path)}"
+  etag = filemd5(local.bootstrap_path)
 
-    tags = var.tags
+  tags = var.tags
 }
 
 resource "aws_s3_bucket_object" "apps_file" {
-    bucket = var.bucket_name
-    key = "apps.yaml"
-    source = local.apps_file_path
+  bucket = var.bucket_name
+  key    = "apps.yaml"
+  source = local.apps_file_path
 
-    etag = "${filemd5(local.apps_file_path)}"
+  etag = filemd5(local.apps_file_path)
 
-    tags = var.tags
+  tags = var.tags
+}
+
+resource "aws_s3_bucket_object" "settings_file" {
+  bucket = var.bucket_name
+  key    = "configuration/config/settings.yaml"
+  source = local.settings_file_path
+
+  etag = filemd5(local.settings_file_path)
+
+  tags = var.tags
+}
+
+resource "aws_s3_bucket_object" "cloudgene_conf" {
+  bucket = var.bucket_name
+  key    = "configuration/cloudgene.conf"
+  source = local.cloudgene_conf_path
+
+  etag = filemd5(local.cloudgene_conf_path)
+
+  tags = var.tags
+}
+
+resource "aws_s3_bucket_object" "cloudgene_aws" {
+  bucket = var.bucket_name
+  key    = "configuration/cloudgene-aws"
+  source = local.clougene_aws_path
+
+  etag = filemd5(local.clougene_aws_path)
+
+  tags = var.tags
 }
