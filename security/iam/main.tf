@@ -24,38 +24,30 @@ terraform {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# SET AWS ACCOUNT ALIAS
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_iam_account_alias" "alias" {
+  account_alias = var.aws_account_alias
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # CREATE GROUP AND ROLE FOR ADMIN PERMISSIONS
 # ---------------------------------------------------------------------------------------------------------------------
 
-## Create "umich_admin" IAM group
-resource "aws_iam_group" "um_admin" {
-  name = "umich_admin"
-}
-
 ## Create "UMAdminRole"
 resource "aws_iam_role" "um_admin" {
-  name = "UMAdminRole"
-  description = "Allow Admin access for UM Admins"
+  name               = "UMAdminRole"
+  description        = "Allow Admin access for UM Admins"
+  assume_role_policy = data.aws_iam_policy_document.um_admin_role_assume.json
 
   tags = var.tags
 }
 
-## Attach trust policy to role to only allow users from "um_admin" group to assume
-resource "aws_iam_role_policy_attachment" "um_admin_trust" {
-  role = aws_iam_role.um_admin.name
-  policy_arn = aws_iam_policy_document.um_admin_role_trust.arn
-}
-
 ## Attach AdministratorAccess policy to UMAdmin role
 resource "aws_iam_role_policy_attachment" "um_admin" {
-  role = aws_iam_role.um_admin.name
+  role       = aws_iam_role.um_admin.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-}
-
-## Attach IAM policy to allow group to assume role
-resource "aws_iam_role_group_policy_attachment" "um_admin_assume" {
-  group = aws_iam_group.um_admin.name
-  policy_arn = aws_iam_policy_document.um_admin_role_assume.arn
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

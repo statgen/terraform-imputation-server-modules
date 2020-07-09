@@ -10,6 +10,12 @@ variable "aws_account_id" {
   default     = null
 }
 
+variable "aws_account_alias" {
+  description = "The IAM Account Alias"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to module resources"
   type        = map(string)
