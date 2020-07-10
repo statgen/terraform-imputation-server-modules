@@ -125,7 +125,7 @@ resource "aws_lambda_function" "this" {
 
   description = "Lambda Edge function to set proper security headers"
 
-  runtime = "nodejs8.10"
+  runtime = "nodejs12.x"
 
   tags = var.tags
 }
