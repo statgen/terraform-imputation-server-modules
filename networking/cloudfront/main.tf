@@ -64,7 +64,7 @@ resource "aws_cloudfront_distribution" "this" {
     prefix          = "cloudfront"
   }
 
-  aliases = ["topmed.${var.sub_domain}"]
+  // aliases = ["topmed.${var.sub_domain}"]
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
