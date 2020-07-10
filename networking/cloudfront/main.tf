@@ -27,10 +27,6 @@ data "aws_acm_certificate" "this" {
   domain = var.sub_domain
 }
 
-data "aws_acm_certificate" "gov" {
-  domain = "imputation.biodatacatalyst.nhlbi.nih.gov"
-}
-
 data "archive_file" "this" {
   type        = "zip"
   source_file = "functions/index.js"
@@ -115,83 +111,6 @@ resource "aws_cloudfront_distribution" "this" {
 }
 
 # ----------------------------------------------------------------------------------------------------------------------
-# CREATE GOV CLOUDFRONT DISTRIBUTION
-# ----------------------------------------------------------------------------------------------------------------------
-
-locals {
-  gov_origin_id = "${var.name_prefix}-gov-cloudfront-origin"
-}
-
-resource "aws_cloudfront_distribution" "gov" {
-  origin {
-    domain_name = var.lb_dns_name
-    origin_id   = local.gov_origin_id
-
-    custom_origin_config {
-      http_port              = "80"
-      https_port             = "443"
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1.2"]
-    }
-  }
-
-  enabled             = true
-  is_ipv6_enabled     = false
-  default_root_object = "index.html"
-
-  logging_config {
-    include_cookies = false
-    bucket          = var.log_bucket
-    prefix          = "cloudfront-gov"
-  }
-
-  aliases = ["imputation.biodatacatalyst.nhlbi.nih.gov"]
-
-  default_cache_behavior {
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = ["GET", "HEAD"]
-    target_origin_id = local.gov_origin_id
-
-    forwarded_values {
-      query_string = true
-
-      headers = ["*"]
-
-      cookies {
-        forward = "all"
-      }
-    }
-
-    viewer_protocol_policy = "redirect-to-https"
-    min_ttl                = 0
-    default_ttl            = 0
-    max_ttl                = 0
-
-    lambda_function_association {
-      event_type   = "origin-response"
-      lambda_arn   = aws_lambda_function.this.qualified_arn
-      include_body = false
-    }
-  }
-
-  restrictions {
-    geo_restriction {
-      restriction_type = "none"
-    }
-  }
-
-  viewer_certificate {
-    acm_certificate_arn      = data.aws_acm_certificate.gov.arn
-    ssl_support_method       = "sni-only"
-    minimum_protocol_version = "TLSv1.1_2016"
-  }
-
-  web_acl_id = var.web_acl_id
-
-  tags = var.tags
-}
-
-# ----------------------------------------------------------------------------------------------------------------------
 # CREATE LAMBDA@EDGE FUNCTION
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -215,16 +134,16 @@ resource "aws_lambda_function" "this" {
 # CREATE ROUTE53 RECORD FOR CLOUDFRONT
 # ----------------------------------------------------------------------------------------------------------------------
 
-resource "aws_route53_record" "a" {
-  depends_on = [aws_cloudfront_distribution.this]
-  zone_id    = var.route53_zone_id
-  name       = "topmed.${var.sub_domain}"
+// resource "aws_route53_record" "a" {
+//   depends_on = [aws_cloudfront_distribution.this]
+//   zone_id    = var.route53_zone_id
+//   name       = "topmed.${var.sub_domain}"
 
-  type = "A"
+//   type = "A"
 
-  alias {
-    name                   = aws_cloudfront_distribution.this.domain_name
-    zone_id                = aws_cloudfront_distribution.this.hosted_zone_id
-    evaluate_target_health = true
-  }
-}
+//   alias {
+//     name                   = aws_cloudfront_distribution.this.domain_name
+//     zone_id                = aws_cloudfront_distribution.this.hosted_zone_id
+//     evaluate_target_health = true
+//   }
+// }
