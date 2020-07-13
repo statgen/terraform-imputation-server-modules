@@ -27,6 +27,12 @@ terraform {
 # CREATE EC2 INSTANCE(S)
 # ----------------------------------------------------------------------------------------------------------------------
 
+locals {
+  account_id = data.aws_caller_identity.current.account_id
+}
+
+data "aws_caller_identity" "current" {}
+
 data "aws_ami" "this" {
   most_recent = true
 
@@ -35,7 +41,7 @@ data "aws_ami" "this" {
     values = ["monitoring-server-*"]
   }
 
-  owners = ["536148068215"]
+  owners = [local.account_id]
 }
 
 
