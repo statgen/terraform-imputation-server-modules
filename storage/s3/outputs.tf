@@ -1,6 +1,6 @@
 output "imputation_server_bucket_id" {
   description = "The name of the S3 bucket used for Imputation Server"
-  value = aws_s3_bucket.imputation_server.id
+  value       = aws_s3_bucket.imputation_server.id
 }
 
 output "this_kms_key_id" {
