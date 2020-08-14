@@ -3,7 +3,7 @@ provider "aws" {
   region = var.aws_region
 
   # Require a 2.x version of the AWS provider
-  version = "~> 2.6"
+  version = "~> 3.2"
 
   # Only these AWS Account IDs may be operated on
   allowed_account_ids = var.aws_account_id
@@ -31,7 +31,7 @@ data "aws_region" "current" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "2.33.0"
+  version = "2.47.0"
 
   name = "${var.name_prefix}-app-vpc"
   cidr = var.cidr_block
