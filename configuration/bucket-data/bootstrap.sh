@@ -10,6 +10,7 @@ set -eo pipefail
 
 readonly IMPUTATION_SERVER_VERSION="1.3.3"
 readonly CLOUDGENE_VERSION="2.2.0"
+readonly CLOUDGENE_URL="https://github.com/statgen/cloudgene/releases/download/v${CLOUDGENE_VERSION}/cloudgene-installer.sh"
 readonly IMPUTATION_SERVER_BUCKET="nih-nhlbi-imputation-server"
 
 readonly SCRIPT_NAME="$(basename "$0")"
@@ -59,6 +60,27 @@ function install_cloudgene {
 
   cd /home/hadoop
   curl -s install.cloudgene.io | bash -s ${CLOUDGENE_VERSION}
+}
+
+## Install and setup Cloudgene from CSG repository
+function install_cloudgene_custom {
+  log_info "Installing custom CloudGene from ${CLOUDGENE_URL}"
+
+  log_info "Downloading CloudGene"
+  cd /home/hadoop
+  curl -fL ${CLOUDGENE_URL} -o cloudgene-installer.sh
+
+  chmod +x ./cloudgene-installer.sh
+  
+  log_info "Running CloudGene installer"
+  ./cloudgene-installer.sh
+
+  chmod +x ./cloudgene
+  chmod +x ./cloudgene-daemon
+
+  rm ./cloudgene-installer.sh
+
+  log_info "CloudGene installation completed"
 }
 
 ## Install and setup Docker
@@ -123,7 +145,13 @@ function install {
     exit 0
   fi
 
-  install_cloudgene
+  # Poor/lazy check for "custom" argument to know which repository to pull from
+  if [[ "$1" = "custom" ]]; then
+    install_cloudgene_custom
+  else
+    install_cloudgene
+  fi
+
   install_docker
   configure_cloudgene
   install_reference_panels
