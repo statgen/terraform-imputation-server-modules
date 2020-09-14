@@ -3,8 +3,9 @@
 set -e
 
 readonly CLOUDWATCH_CONFIG_FILE="cloudwatch-config.json"
-readonly DOWNLOAD_CLOUDWATCH_PACKAGE_PATH="/tmp/amazon-cloudwatch-agent.rpm"
 readonly CLOUDWATCH_CONFIGURATION_PATH="/opt/aws/amazon-cloudwatch-agent/config"
+readonly DOWNLOAD_CLOUDWATCH_PACKAGE_PATH="/tmp/amazon-cloudwatch-agent.rpm"
+readonly NODE_EXPORTER_VERSION="1.0.1"
 
 readonly SCRIPT_NAME="$(basename "$0")"
 
@@ -101,25 +102,38 @@ function install_cloudwatch_agent {
   sudo mv "/tmp/cloudwatch-config.json" "${CLOUDWATCH_CONFIGURATION_PATH}/${CLOUDWATCH_CONFIG_FILE}"
 
   log_info "Starting CloudWatch agent"
-  sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:"${CLOUDWATCH_CONFIGURATION_PATH}/${CLOUDWATCH_CONFIG_FILE}" -s
+  sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:"${CLOUDWATCH_CONFIGURATION_PATH}/${CLOUDWATCH_CONFIG_FILE}" -s
 }
 
 function install_node_exporter {
-  log_info "Installing node_exporter"
+  log_info "Installing node exporter"
 
+  sudo useradd --system --shell /bin/false node_exporter
+
+  log_info "Downloading binary"
   retry \
-    "curl -o '/tmp/node_exporter-0.18.1.linux-amd64.tar.gz' 'https://github.com/prometheus/node_exporter/releases/download/v0.18.1/node_exporter-0.18.1.linux-amd64.tar.gz' --location --silent --fail --show-error" \
+    "curl -o '/tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz' 'https://github.com/prometheus/node_exporter/releases/download/v${NODE_EXPORTER_VERSION}/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz' --location --silent --fail --show-error" \
     "Downloading node_exporter to /tmp/" 
-  sudo tar -xf "/tmp/node_exporter-0.18.1.linux-amd64.tar.gz" -C "/tmp/"
-  sudo mkdir -p "/opt/prometheus"
-  sudo mv "/tmp/node_exporter-0.18.1.linux-amd64" "/opt/prometheus/node_exporter"
 
-  # Amazon Linux uses upstart... 
-  sudo mv "/tmp/node_exporter.conf" "/etc/init/node_exporter.conf"
+  log_info "Unpacking node exporter archive"
+  sudo tar -xf "/tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz" -C "/tmp/"
 
-  log_info "Starting node_exporter daemon..."
+  log_info "Moving node exporter binaries to /usr/local/bin"
+  sudo cp "/tmp/node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64/node_exporter" "/usr/local/bin/node_exporter"
 
-  sudo initctl start node_exporter
+  sudo chown node_exporter:node_exporter "/usr/local/bin/node_exporter"
+
+  log_info "Cleaning up downloaded files"
+  rm -rf "node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz" "node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64"
+
+  # Setup node exporter systemd service
+  sudo mv "/tmp/node_exporter.service" "/etc/systemd/system/node_exporter.service"
+
+  # Reload systemd with new service
+  sudo systemctl daemon-reload
+
+  # Enable the service to start on boot
+  sudo systemctl enable node_exporter
 }
 
 function install {
