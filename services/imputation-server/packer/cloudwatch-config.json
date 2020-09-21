@@ -46,7 +46,17 @@
 						"file_path": "/var/log/docker",
 						"log_group_name": "docker",
 						"log_stream_name": "{instance_id}"
-					}
+                                        },
+                                        {
+                                                "file_path": "/var/log/amazon/ssm/amazon-ssm-agent.log",
+                                                "log_group_name": "SSM Agent Logs",
+                                                "log_stream_name": "{instance_id}"
+                                        },
+                                        {
+                                                "file_path": "/var/log/amazon/ssm/errors.log",
+                                                "log_group_name": "SSM Agent Errors",
+                                                "log_stream_name": "{instance_id}"
+                                        }
 				]
                         }
                 }

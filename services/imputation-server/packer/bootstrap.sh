@@ -136,6 +136,17 @@ function install_node_exporter {
   sudo systemctl enable node_exporter
 }
 
+# Workaround for EMR bug that disables amazon-ssm-agent. See script called for details.
+function setup_ssm_crontab {
+  log_info "Setting up SSM crontab"
+
+  sudo mv "/tmp/start-ssm-crontab.sh" "/usr/local/sbin/start-ssm-crontab.sh"
+  sudo chmod +x "/usr/local/sbin/start-ssm-crontab.sh"
+
+  # Add crontab entry to run every minute.
+  echo "* * * * * root /bin/bash /usr/local/sbin/start-ssm-crontab.sh" | sudo tee -a "/etc/cron.d/start-ssm" >> "/dev/null"
+}
+
 function install {
   local version="latest"
   local download_url=""
@@ -146,6 +157,7 @@ function install {
   fetch_cloudwatch_pkg "$version" "$download_url"
   install_cloudwatch_agent
   install_node_exporter
+  setup_ssm_crontab
 }
 
 install "$@"

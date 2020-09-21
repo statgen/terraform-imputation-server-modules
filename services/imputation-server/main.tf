@@ -32,7 +32,7 @@ locals {
 }
 
 module "imputation-server" {
-  source = "github.com/jdpleiness/terraform-aws-imputation-server.git//modules/imputation-server?ref=v1.2.0"
+  source = "github.com/jdpleiness/terraform-aws-imputation-server.git//modules/imputation-server"
 
   name_prefix = var.name_prefix
 

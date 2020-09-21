@@ -33,6 +33,10 @@
         "source": "cloudwatch-config.json",
         "destination": "/tmp/cloudwatch-config.json"
     },{
+        "type": "file",
+        "source": "start-ssm-crontab.sh",
+        "destination": "/tmp/start-ssm-crontab.sh"
+    },{
         "type": "shell",
         "script": "{{user `script_path`}}"
     }]

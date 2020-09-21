@@ -252,6 +252,18 @@ resource "aws_security_group_rule" "emr_slave_all_egress" {
   security_group_id = aws_security_group.emr_slave.id
 }
 
+resource "aws_security_group_rule" "emr_service_master_ingress" {
+  type                     = "ingress"
+  from_port                = "9443"
+  to_port                  = "9443"
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.emr_master.id
+
+  description = "Allows communication between master instances security group to the service security group"
+
+  security_group_id = aws_security_group.emr_service.id
+}
+
 # ----------------------------------------------------------------------------------------------------------------------
 # CREATE IMPUTATION LB SECURITY GROUP RULES
 # ----------------------------------------------------------------------------------------------------------------------
