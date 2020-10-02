@@ -45,6 +45,7 @@ locals {
   hosting_png_path                         = "${local.images_path}/hosting.png"
   impute_png_path                          = "${local.images_path}/impute.png"
   michigan_imputation_server_logo_png_path = "${local.images_path}/michigan-imputation-server-logo.png"
+  tis_logo_png_path                        = "${local.images_path}/tis-logo.png"
   nhlbi_biodata_catalyst_logo_png_path     = "${local.images_path}/nhlbi-biodata-catalyst-logo.png"
   nhlbi_topmed_logo_png_path               = "${local.images_path}/nhlbi-topmed-logo.png"
   secure_png_path                          = "${local.images_path}/secure.png"
@@ -188,6 +189,16 @@ resource "aws_s3_bucket_object" "michigan_imputation_server_logo_png" {
   source = local.michigan_imputation_server_logo_png_path
 
   etag = filemd5(local.michigan_imputation_server_logo_png_path)
+
+  tags = var.tags
+}
+
+resource "aws_s3_bucket_object" "tis_logo_png_path" {
+  bucket = var.bucket_name
+  key    = "configuration/pages/images/tis-logo.png"
+  source = local.tis_logo_png_path
+
+  etag = filemd5(local.tis_logo_png_path)
 
   tags = var.tags
 }
