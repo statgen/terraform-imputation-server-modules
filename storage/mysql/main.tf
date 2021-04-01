@@ -1,14 +1,3 @@
-provider "aws" {
-  # The AWS region in which all resources will be created
-  region = var.aws_region
-
-  # Require a 2.x version of the AWS provider
-  version = "~> 3.2"
-
-  # Only these AWS Account IDs may be operated on
-  allowed_account_ids = var.aws_account_id
-}
-
 # ---------------------------------------------------------------------------------------------------------------------
 # TERRAFORM STATE BLOCK
 # ---------------------------------------------------------------------------------------------------------------------
@@ -17,10 +6,14 @@ terraform {
   # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
   # https://www.terraform.io/docs/backends/config.html#partial-configuration
   backend "s3" {}
+}
 
-  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
-  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = ">= 0.13"
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
+
+  # Only these AWS Account IDs may be operated on
+  allowed_account_ids = var.aws_account_id
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -29,7 +22,7 @@ terraform {
 
 module "rds" {
   source  = "terraform-aws-modules/rds/aws"
-  version = "2.5.0"
+  version = "2.34.0"
 
   identifier = "${var.name_prefix}-db"
 
@@ -47,7 +40,12 @@ module "rds" {
   port     = var.db_port
 
   create_db_subnet_group = true
+  db_subnet_group_description = "Database subnet group for ${var.name_prefix}-db"
   subnet_ids             = var.database_subnets
+
+  option_group_description = "Option group for ${var.name_prefix}-db"
+
+  parameter_group_description = "Database parameter group for ${var.name_prefix}-db"
 
   vpc_security_group_ids = [var.database_sg_id]
 
