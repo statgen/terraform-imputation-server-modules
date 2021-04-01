@@ -1,13 +1,3 @@
-provider "aws" {
-  # The AWS region in which all resources will be created
-  region = var.aws_region
-
-  # Require a 2.x version of the AWS provider
-  version = "~> 3.2"
-
-  # Only these AWS Account IDs may be operated on
-  allowed_account_ids = var.aws_account_id
-}
 
 # ---------------------------------------------------------------------------------------------------------------------
 # TERRAFORM STATE BLOCK
@@ -17,10 +7,14 @@ terraform {
   # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
   # https://www.terraform.io/docs/backends/config.html#partial-configuration
   backend "s3" {}
+}
 
-  # Only allow this Terraform version. Note that if you upgrade to a newer version, Terraform won't allow you to use an
-  # older version, so when you upgrade, you should upgrade everyone on your team and your CI servers all at once.
-  required_version = ">= 0.13"
+provider "aws" {
+  # The AWS region in which all resources will be created
+  region = var.aws_region
+
+  # Only these AWS Account IDs may be operated on
+  allowed_account_ids = var.aws_account_id
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -31,19 +25,56 @@ data "aws_acm_certificate" "this" {
   domain = var.domain
 }
 
-module "imputation-lb" {
-  source = "git@github.com:jdpleiness/terraform-aws-imputation-server.git//modules/imputation-lb"
+module "alb" {
+  source  = "terraform-aws-modules/alb/aws"
+  version = "5.12.0"
 
-  name_prefix = var.name_prefix
-  vpc_id      = var.vpc_id
+  name = "${var.name_prefix}-lb"
 
-  lb_security_group = var.lb_security_group
-  lb_subnets        = var.lb_subnets
+  load_balancer_type = "application"
 
-  master_node_id  = var.master_node_id
-  certificate_arn = data.aws_acm_certificate.this.arn
+  vpc_id          = var.vpc_id
+  security_groups = [var.lb_security_group]
+  subnets         = var.lb_subnets
 
-  enable_https = var.enable_https
+  target_groups = [
+    {
+      name             = "${var.name_prefix}-tg-2"
+      backend_port     = var.backend_port
+      backend_protocol = "HTTP"
+      protocol_version = "HTTP1"
+      target_type      = "instance"
+      health_check = {
+        enabled             = true
+        path                = "/index.html"
+        port                = "traffic-port"
+        timeout             = 5
+        healthy_threshold   = 5
+        unhealthy_threshold = 2
+        matcher             = "200"
+      }
+      stickiness = {
+        type    = "lb_cookie"
+        enabled = false
+      }
+    }
+  ]
+
+  https_listeners = [
+    {
+      port               = 443
+      protocol           = "HTTPS"
+      certificate_arn    = data.aws_acm_certificate.this.arn
+      ssl_policy         = var.ssl_policy
+      target_group_index = 0
+    }
+  ]
 
   tags = var.tags
+}
+
+resource "aws_lb_target_group_attachment" "imputation_tg_target" {
+  target_group_arn = module.alb.target_group_arns[0]
+  target_id        = var.master_node_id
+  port             = var.backend_port
 }

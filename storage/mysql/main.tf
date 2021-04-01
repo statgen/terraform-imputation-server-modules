@@ -39,9 +39,9 @@ module "rds" {
   password = var.db_password
   port     = var.db_port
 
-  create_db_subnet_group = true
+  create_db_subnet_group      = true
   db_subnet_group_description = "Database subnet group for ${var.name_prefix}-db"
-  subnet_ids             = var.database_subnets
+  subnet_ids                  = var.database_subnets
 
   option_group_description = "Option group for ${var.name_prefix}-db"
 

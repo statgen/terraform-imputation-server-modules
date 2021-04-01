@@ -10,8 +10,8 @@ variable "aws_account_id" {
   default     = null
 }
 
-variable "name_prefix" {
-  description = "A name prefix used in resource names to ensure uniqueness accross acounts"
+variable "backend_port" {
+  description = "The port to use to in the target group to connect with the target"
   type        = string
   default     = null
 }
@@ -46,8 +46,14 @@ variable "master_node_id" {
   default     = null
 }
 
-variable "vpc_id" {
-  description = "The ID of the VPC in which the cluster is deployed"
+variable "name_prefix" {
+  description = "A name prefix used in resource names to ensure uniqueness accross acounts"
+  type        = string
+  default     = null
+}
+
+variable "ssl_policy" {
+  description = "The name of the SSL Policy for the listener"
   type        = string
   default     = null
 }
@@ -59,3 +65,10 @@ variable "tags" {
     Terraform = true
   }
 }
+
+variable "vpc_id" {
+  description = "The ID of the VPC in which the cluster is deployed"
+  type        = string
+  default     = null
+}
+
