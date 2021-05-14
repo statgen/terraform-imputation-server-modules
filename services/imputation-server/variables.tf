@@ -22,6 +22,12 @@ variable "name_prefix" {
   default     = null
 }
 
+variable "node_manager_resource_memory_mb" {
+  description = "Amount of memory for task nodes to allocate toward containers. Should be less than total amount of memory"
+  default     = null
+  type        = string
+}
+
 variable "public_key" {
   description = "Public key for AWS key pair for EMR cluster"
   default     = null

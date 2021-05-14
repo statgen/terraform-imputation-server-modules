@@ -40,7 +40,7 @@ function retry {
     log_info "$description"
 
     # The boolean operations with the exit status are there to temporarily circumvent the "set -e" at the
-    # beginning of this script which exits the script immediatelly for error status while not losing the exit status code
+    # beginning of this script which exits the script immediately for error status while not losing the exit status code
     output=$(eval "$cmd") && exit_status=0 || exit_status=$?
     log_info "$output"
     if [[ $exit_status -eq 0 ]]; then
@@ -127,13 +127,15 @@ function install_node_exporter {
   rm -rf "node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz" "node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64"
 
   # Setup node exporter systemd service
-  sudo mv "/tmp/node_exporter.service" "/etc/systemd/system/node_exporter.service"
+  # sudo mv "/tmp/node_exporter.service" "/etc/systemd/system/node_exporter.service"
+  sudo mv "/tmp/node_exporter.conf" "/etc/init/node_exporter.conf"
 
   # Reload systemd with new service
-  sudo systemctl daemon-reload
+  # sudo systemctl daemon-reload
 
   # Enable the service to start on boot
-  sudo systemctl enable node_exporter
+  # sudo systemctl enable node_exporter
+  sudo initctl start node_exporter
 }
 
 # Workaround for EMR bug that disables amazon-ssm-agent. See script called for details.
@@ -157,7 +159,7 @@ function install {
   fetch_cloudwatch_pkg "$version" "$download_url"
   install_cloudwatch_agent
   install_node_exporter
-  setup_ssm_crontab
+  # setup_ssm_crontab
 }
 
 install "$@"

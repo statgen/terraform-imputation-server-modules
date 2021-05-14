@@ -4,8 +4,8 @@
         "aws_region": "",
         "aws_secret_key": "",
         "script_path": "bootstrap.sh",
-        "subnet_id": "subnet-093605eb850e61c57",
-        "vpc_id": "vpc-0b0b9d49525f5261b"
+        "subnet_id": "subnet-08a57f83597d899fe",
+        "vpc_id": "vpc-0870e57dc1764d723"
     },
     "builders": [{
         "type": "amazon-ebs",
@@ -15,9 +15,9 @@
         "access_key": "{{user `aws_access_key`}}",
         "secret_key": "{{user `aws_secret_key`}}",
         "region": "{{user `aws_region`}}",
-        "ami_name": "amzn2-imputation-server-{{isotime \"20060102-030405\"}}",
+        "ami_name": "imputation-server-{{isotime \"20060102-030405\"}}",
         "ami_description": "Base AMI for imputation server EMR instances",
-        "source_ami": "ami-0c94855ba95c71c99",
+        "source_ami": "ami-0ff8a91507f77f867",
         "instance_type": "t2.large",
         "ssh_username": "ec2-user",
         "tags": {
@@ -26,16 +26,12 @@
     }],
     "provisioners": [{
         "type": "file",
-        "source": "node_exporter.service",
-        "destination": "/tmp/node_exporter.service"
+        "source": "node_exporter.conf",
+        "destination": "/tmp/node_exporter.conf"
     },{
         "type": "file",
         "source": "cloudwatch-config.json",
         "destination": "/tmp/cloudwatch-config.json"
-    },{
-        "type": "file",
-        "source": "start-ssm-crontab.sh",
-        "destination": "/tmp/start-ssm-crontab.sh"
     },{
         "type": "shell",
         "script": "{{user `script_path`}}"

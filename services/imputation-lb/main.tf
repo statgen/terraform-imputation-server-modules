@@ -38,7 +38,7 @@ module "alb" {
 
   target_groups = [
     {
-      name             = "${var.name_prefix}-tg-2"
+      name             = "${var.name_prefix}-tg"
       backend_port     = var.backend_port
       backend_protocol = "HTTP"
       protocol_version = "HTTP1"

@@ -2,8 +2,8 @@
 
 set -e
 
-readonly PROMETHEUS_VERSION="2.19.2"
-readonly NODE_EXPORTER_VERSION="1.0.1"
+readonly PROMETHEUS_VERSION="2.26.0"
+readonly NODE_EXPORTER_VERSION="1.1.2"
 
 readonly SCRIPT_NAME="$(basename "$0")"
 
@@ -34,11 +34,11 @@ function retry {
   local -r cmd="$1"
   local -r description="$2"
 
-  for i in $(seq 1 5); do
+  for _ in $(seq 1 5); do
     log_info "$description"
 
     # The boolean operations with the exit status are there to temporarily circumvent the "set -e" at the
-    # beginning of this script which exits the script immediatelly for error status while not losing the exit status code
+    # beginning of this script which exits the script immediately for error status while not losing the exit status code
     output=$(eval "$cmd") && exit_status=0 || exit_status=$?
     log_info "$output"
     if [[ $exit_status -eq 0 ]]; then
