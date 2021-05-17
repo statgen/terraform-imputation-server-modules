@@ -51,11 +51,10 @@ module "imputation-server" {
   core_instance_count_max = var.core_instance_count_max
   core_instance_count_min = var.core_instance_count_min
 
-  task_instance_type              = var.task_instance_type
-  task_instance_ebs_size          = var.task_instance_ebs_size
-  task_instance_count_max         = var.task_instance_count_max
-  task_instance_count_min         = var.task_instance_count_min
-  node_manager_resource_memory_mb = var.node_manager_resource_memory_mb
+  task_instance_type      = var.task_instance_type
+  task_instance_ebs_size  = var.task_instance_ebs_size
+  task_instance_count_max = var.task_instance_count_max
+  task_instance_count_min = var.task_instance_count_min
 
   public_key = var.public_key
 
