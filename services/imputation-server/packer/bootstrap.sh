@@ -5,7 +5,7 @@ set -e
 readonly CLOUDWATCH_CONFIG_FILE="cloudwatch-config.json"
 readonly CLOUDWATCH_CONFIGURATION_PATH="/opt/aws/amazon-cloudwatch-agent/config"
 readonly DOWNLOAD_CLOUDWATCH_PACKAGE_PATH="/tmp/amazon-cloudwatch-agent.rpm"
-readonly NODE_EXPORTER_VERSION="1.0.1"
+readonly NODE_EXPORTER_VERSION="1.1.2"
 
 readonly SCRIPT_NAME="$(basename "$0")"
 
