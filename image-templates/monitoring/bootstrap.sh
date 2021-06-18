@@ -58,7 +58,7 @@ function create_service_users {
   log_info "Setting up service user accounts"
 
   sudo useradd --no-create-home --shell /bin/false prometheus
-  sudo useradd --no-create-home --shell /bin/false node_exporter
+  # sudo useradd --no-create-home --shell /bin/false node_exporter
 
   sudo mkdir "/etc/prometheus"
   sudo mkdir "/var/lib/prometheus"
@@ -176,7 +176,7 @@ function setup {
   create_service_users
   install_prometheus
   configure_prometheus
-  install_node_exporter
+  # install_node_exporter
   install_grafana
 }
 

@@ -1,0 +1,79 @@
+---
+- name: Check current prometheus version.
+  command: "{{ prometheus_bin_path }} --version"
+  failed_when: false
+  changed_when: false
+  register: prometheus_version_check
+
+- name: Download and unarchive prometheus into temporary location.
+  unarchive:
+    src: "{{ prometheus_download_url }}"
+    dest: /tmp
+    remote_src: true
+    mode: 0775
+  when: >
+    prometheus_version_check.stdout is not defined
+    or prometheus_version not in prometheus_version_check.stdout
+
+- name: Move prometheus binary into place.
+  copy:
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ prometheus_arch }}/prometheus"
+    dest: "{{ prometheus_bin_path }}"
+    mode: 0755
+    remote_src: true
+  notify: restart prometheus
+
+- name: Move promtool binary into place.
+  copy:
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ prometheus_arch }}/promtool"
+    dest: "{{ prometheus_bin_path }}"
+    mode: 0755
+    remote_src: true
+
+- name: Move console settings into place.
+  copy:
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ prometheus_arch }}/consoles"
+    dest: /etc/prometheus
+    mode: 0755
+    remote_src: true
+
+- name: Move consoles libraries into place.
+  copy:
+    src: "/tmp/prometheus-{{ prometheus_version }}.linux-{{ prometheus_arch }}/console_libraries"
+    dest: /etc/prometheus
+    mode: 0755
+    remote_src: true
+
+- name: Create prometheus user.
+  user:
+    name: prometheus
+    shell: /sbin/nologin
+    state: present
+
+- name: Copy the prometheus config file.
+  template:
+    src: prometheus.yml.j2
+    dest: /etc/prometheus/prometheus.yml
+    mode: 0755
+  register: prometheus_config
+
+- name: Copy the prometheus systemd unit file.
+  template:
+    src: prometheus.service.j2
+    dest: /etc/systemd/system/prometheus.service
+    mode: 0644
+  register: prometheus_service
+
+- name: Reload systemd daemon if unit or config file is changed.
+  systemd:
+    daemon_reload: true
+  notify: restart prometheus
+  when: >
+    prometheus_service is changed
+    or prometheus_config is changed
+
+- name: Ensure prometheus is running and enabled at boot.
+  service:
+    name: prometheus
+    state: "{{ prometheus_state }}"
+    enabled: "{{ prometheus_enabled }}"

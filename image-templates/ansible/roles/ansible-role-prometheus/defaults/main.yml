@@ -1,0 +1,11 @@
+---
+prometheus_version: "2.26.0"
+prometheus_arch: "amd64"
+prometheus_download_url: "https://github.com/prometheus/prometheus/releases/download/v{{ prometheus_version }}/prometheus-{{ prometheus_version }}.linux-{{ prometheus_arch }}.tar.gz"
+
+prometheus_bin_path: /usr/local/bin/prometheus
+
+prometheus_options: ""
+
+prometheus_state: started
+prometheus_enabled: true

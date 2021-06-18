@@ -1,0 +1,10 @@
+---
+- hosts: all
+  name: Install Node Exporter
+  become: yes
+  become_method: sudo
+  roles:
+    - geerlingguy.node_exporter
+    - "../ansible/roles/ansible-role-prometheus"
+  vars:
+    node_exporter_version: "1.1.2"
