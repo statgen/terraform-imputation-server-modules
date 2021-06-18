@@ -3,13 +3,13 @@
 if grep -q "Amazon Linux * 2" /etc/*release ; then
   yum install openscap-scanner scap-security-guide -y
   scriptFile="/usr/share/xml/scap/ssg/content/ssg-amzn2-ds.xml"
-  profile=xccdf_org.ssgproject.content_profile_nist-800-171-cui
+  profile=xccdf_org.ssgproject.content_profile_C2S
 elif grep -q "Amazon Linux" /etc/*release ; then
   yum install openscap-scanner scap-security-guide -y
   scriptFile="/usr/share/xml/scap/ssg/content/ssg-amzn1-ds.xml"
-  profile=xccdf_org.ssgproject.content_profile_fisma-medium-rhel6-server
+  profile=xccdf_org.ssgproject.content_profile_C2S
 elif grep -q "Ubuntu" /etc/*release ; then
-  apt-get install libopenscap8 ssg-base ssg-debderived ssg-debian ssg-nondebian ssg-applications
+  apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install libopenscap8 ssg-base ssg-debderived ssg-debian ssg-nondebian ssg-applications -y
   scriptFile="/usr/share/xml/scap/ssg/content/ssg-ubuntu1604-ds.xml"
   profile=xccdf_org.ssgproject.content_profile_standard
 else

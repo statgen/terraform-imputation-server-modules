@@ -127,15 +127,15 @@ function install_node_exporter {
   rm -rf "node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64.tar.gz" "node_exporter-${NODE_EXPORTER_VERSION}.linux-amd64"
 
   # Setup node exporter systemd service
-  # sudo mv "/tmp/node_exporter.service" "/etc/systemd/system/node_exporter.service"
-  sudo mv "/tmp/node_exporter.conf" "/etc/init/node_exporter.conf"
+  sudo mv "/tmp/node_exporter.service" "/etc/systemd/system/node_exporter.service"
+  # sudo mv "/tmp/node_exporter.conf" "/etc/init/node_exporter.conf"
 
   # Reload systemd with new service
-  # sudo systemctl daemon-reload
+  sudo systemctl daemon-reload
 
   # Enable the service to start on boot
-  # sudo systemctl enable node_exporter
-  sudo initctl start node_exporter
+  sudo systemctl enable node_exporter
+  # sudo initctl start node_exporter
 }
 
 # Workaround for EMR bug that disables amazon-ssm-agent. See script called for details.

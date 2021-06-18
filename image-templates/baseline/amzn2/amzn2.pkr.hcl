@@ -34,25 +34,19 @@ variable "vpc_id" {
   default = "vpc-0b0b9d49525f5261b"
 }
 
-source "amazon-ebs" "amzn" {
-  ami_name        = "amzn-base-{{isotime \"20060102-030405\"}}"
-  source_ami      = "ami-0ff8a91507f77f867"
-  ami_description = "AMZN Linux hardened base"
-
-  instance_type = "c5.large"
-  encrypt_boot  = true
-
-  vpc_id                      = var.vpc_id
-  subnet_id                   = var.subnet_id
-  region                      = var.aws_region
-  associate_public_ip_address = true
-
-  ssh_username = "ec2-user"
+data "amazon-ami" "amazon_linux_2" {
+  filters = {
+    virtualization-type = "hvm"
+    name = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
+    root-device-type = "ebs"
+  }
+  owners = ["amazon"]
+  most_recent = true
 }
 
 source "amazon-ebs" "amzn2" {
   ami_name        = "amzn2-base-{{isotime \"20060102-030405\"}}"
-  source_ami      = "ami-0aeeebd8d2ab47354"
+  source_ami      = data.amazon-ami.amazon_linux_2.id
   ami_description = "AMZN Linux 2 hardened base"
 
   instance_type = "c5.large"
@@ -66,29 +60,23 @@ source "amazon-ebs" "amzn2" {
   ssh_username = "ec2-user"
 }
 
-source "amazon-ebs" "ubuntu" {
-  ami_name        = "ubuntu-20.04-LTS-base-{{isotime \"20060102-030405\"}}"
-  source_ami      = "ami-01de8ddb33de7a3d3"
-  ami_description = "Ubuntu 20.04 LTS hardened base"
-
-  instance_type = "c5.large"
-  encrypt_boot  = true
-
-  vpc_id                      = var.vpc_id
-  subnet_id                   = var.subnet_id
-  region                      = var.aws_region
-  associate_public_ip_address = true
-
-  ssh_username = "ubuntu"
-}
-
 build {
   sources = [
     "source.amazon-ebs.amzn2"
   ]
 
+  provisioner "file" {
+    destination = "/tmp/banner.txt"
+    source      = "banner.txt"
+  }
+  
+  provisioner "shell" {
+    inline = ["sudo mv /tmp/banner.txt /etc/issue"]
+  }
+
   provisioner "ansible" {
     playbook_file = "playbook.yml"
     galaxy_file   = "galaxy.yml"
   }
+  
 }

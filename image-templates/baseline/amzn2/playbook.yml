@@ -1,0 +1,15 @@
+- hosts: all
+  become: yes
+  become_method: sudo
+  collections:
+    - devsec.hardening
+  roles:
+    - devsec.hardening.os_hardening
+    - devsec.hardening.ssh_hardening
+  vars:
+    ssh_ciphers: ['aes128-ctr', 'aes192-ctr', 'aes256-ctr']
+    sshd_log_level: 'INFO'
+    ssh_client_alive_count: 0
+    ssh_macs: ['hmac-sha2-512', 'hmac-sha2-256']
+    ssh_banner: true
+    ssh_banner_path: '/etc/ssh/banner' 
