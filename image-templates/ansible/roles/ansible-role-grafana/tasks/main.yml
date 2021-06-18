@@ -1,0 +1,28 @@
+---
+- name: Add grafana repo.
+  yum_repository:
+    name: grafana
+    description: "Repo for Grafana"
+    baseurl: "https://packages.grafana.com/oss/rpm"
+    repo_gpgcheck: yes
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: "https://packages.grafana.com/gpg.key"
+    sslverify: yes
+    sslcacert: "/etc/pki/tls/certs/ca-bundle.crt"
+
+- name: Install grafana from repo.
+  yum:
+    name: grafana
+    state: latest
+
+- name: Reload system daemon.
+  systemd:
+    daemon_reload: true
+  notify: restart grafana
+
+- name: Ensure grafana is running and enabled at boot.
+  service:
+    name: grafana-server
+    state: "{{ grafana_state }}"
+    enabled: "{{ grafana_enabled }}"

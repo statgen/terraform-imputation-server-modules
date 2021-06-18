@@ -37,15 +37,15 @@ variable "vpc_id" {
 data "amazon-ami" "amazon_linux_2" {
   filters = {
     virtualization-type = "hvm"
-    name = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
-    root-device-type = "ebs"
+    name                = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
+    root-device-type    = "ebs"
   }
-  owners = ["amazon"]
+  owners      = ["amazon"]
   most_recent = true
 }
 
 source "amazon-ebs" "amzn2" {
-  ami_name        = "amzn2-base-{{isotime \"20060102-030405\"}}"
+  ami_name        = "amzn2-ami-hvm-base-x86_64-gp2"
   source_ami      = data.amazon-ami.amazon_linux_2.id
   ami_description = "AMZN Linux 2 hardened base"
 
@@ -57,8 +57,12 @@ source "amazon-ebs" "amzn2" {
   region                      = var.aws_region
   associate_public_ip_address = true
 
-  ssh_username = "ec2-user"
+  ssh_username              = "ec2-user"
   ssh_clear_authorized_keys = true
+
+  tags = {
+    Name = "AMZN Linux 2 hardened base image"
+  }
 }
 
 build {
@@ -70,7 +74,7 @@ build {
     destination = "/tmp/banner.txt"
     source      = "banner.txt"
   }
-  
+
   provisioner "shell" {
     inline = ["sudo mv /tmp/banner.txt /etc/issue"]
   }
@@ -79,5 +83,4 @@ build {
     playbook_file = "playbook.yml"
     galaxy_file   = "requirements.yml"
   }
-  
 }

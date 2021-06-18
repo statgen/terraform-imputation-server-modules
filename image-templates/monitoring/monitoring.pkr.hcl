@@ -10,14 +10,15 @@ variable "aws_secret_key" {
   sensitive = true
 }
 
+variable "ami_owner" {
+  type      = string
+  default   = "879094716711"
+  sensitive = true
+}
+
 variable "region" {
   type    = string
   default = "us-east-1"
-}
-
-variable "script_path" {
-  type    = string
-  default = "bootstrap.sh"
 }
 
 variable "subnet_id" {
@@ -30,23 +31,22 @@ variable "vpc_id" {
   default = "vpc-0b0b9d49525f5261b"
 }
 
-data "amazon-ami" "amazon_linux_2" {
+data "amazon-ami" "base_image" {
   filters = {
     virtualization-type = "hvm"
-    name = "amzn2-ami-hvm-2.0.*-x86_64-gp2"
-    root-device-type = "ebs"
+    name                = "amzn2-ami-hvm-base-x86_64-gp2"
+    root-device-type    = "ebs"
   }
-  owners = ["amazon"]
+  owners      = [var.ami_owner]
   most_recent = true
 }
 
 source "amazon-ebs" "monitoring" {
-  ami_name        = "monitoring-${formatdate("YYYYMMDD-hms", timestamp())}"
-  source_ami      = data.amazon-ami.amazon_linux_2.id
+  ami_name        = "monitoring-ami-hvm-x86_64-gp2"
+  source_ami      = data.amazon-ami.base_image.id
   ami_description = "Monitoring host image"
 
   instance_type = "c5.xlarge"
-  # encrypt_boot  = true
 
   vpc_id                      = var.vpc_id
   subnet_id                   = var.subnet_id
@@ -56,6 +56,10 @@ source "amazon-ebs" "monitoring" {
 
   ssh_username              = "ec2-user"
   ssh_clear_authorized_keys = true
+
+  tags = {
+    Name = "Monitoring image for imputation environment"
+  }
 }
 
 build {
@@ -63,27 +67,8 @@ build {
     "source.amazon-ebs.monitoring"
   ]
 
-  // provisioner "file" {
-  //   source      = "node_exporter.service"
-  //   destination = "/tmp/node_exporter.service"
-  // }
-
-  // provisioner "file" {
-  //   source      = "prometheus.service"
-  //   destination = "/tmp/prometheus.service"
-  // }
-
-  // provisioner "file" {
-  //   source      = "prometheus.yml"
-  //   destination = "/tmp/prometheus.yml"
-  // }
-
   provisioner "ansible" {
     playbook_file = "playbook.yml"
     galaxy_file   = "requirements.yml"
   }
-
-  // provisioner "shell" {
-  //   script = var.script_path
-  // }
 }
