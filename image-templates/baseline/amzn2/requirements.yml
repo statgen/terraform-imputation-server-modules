@@ -1,4 +1,8 @@
 ---
 # from galaxy
+roles:
+  - src: christiangda.amazon_cloudwatch_agent
+  - src: geerlingguy.node_exporter
+
 collections:
   - name: devsec.hardening
