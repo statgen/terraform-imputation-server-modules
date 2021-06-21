@@ -31,6 +31,19 @@ data "aws_iam_policy_document" "scap_bucket_access" {
   }
 
   statement {
+    sid    = "SCAPBucketScriptAccessPolicy"
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.this.arn}/script*",
+    ]
+  }
+
+  statement {
     effect = "Allow"
 
     actions = [

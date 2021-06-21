@@ -21,5 +21,5 @@ if [ "$scriptFile" ] ; then
 fi
 instanceId=$(curl http://169.254.169.254/latest/meta-data/instance-id)
 timestamp=$(date +%s)
-/usr/bin/aws s3 cp arf.xml s3://nih-nhlbi-imputationserver-scap-dev/"$instanceId"/"$timestamp"-scap-results.xml
-/usr/bin/aws s3 cp report.html s3://nih-nhlbi-imputationserver-scap-dev/"$instanceId"/"$timestamp"-scap-results.html
+/usr/bin/aws s3 cp arf.xml s3://${scap_bucket_name}/"$instanceId"/"$timestamp"-scap-results.xml
+/usr/bin/aws s3 cp report.html s3://${scap_bucket_name}/"$instanceId"/"$timestamp"-scap-results.html

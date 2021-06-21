@@ -14,11 +14,11 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import json
-import boto3
-import datetime
+import os
+import xml.etree.ElementTree as ET
 from datetime import date
-import xml.etree.ElementTree as ET 
+
+import boto3
 
 s3 = boto3.client('s3')
 cloudWatch = boto3.client('cloudwatch')
@@ -34,6 +34,7 @@ def lambda_handler(event, context):
     file_key = event['Records'][0]['s3']['object']['key']
     aws_account_id = context.invoked_function_arn.split(":")[4]
     region = context.invoked_function_arn.split(":")[3]
+    scap_profile = os.environ['scap_profile_name']
     
     #get the instance id from the s3 path
     instanceId = file_key.split('/')[0]
@@ -79,7 +80,7 @@ def lambda_handler(event, context):
             if(item.findtext('{http://checklists.nist.gov/xccdf/1.2}result') == "fail"):
                 buildDynamoDBList(dynamoDbItems, instanceId, item, bucket_name, file_key)
                 if useSecurityHub == "true" and item.attrib.get("severity") in ["high","medium","low"]:
-                    buildSecurityHubFindingsList(securityHubFindings,root, instanceId, item, region, aws_account_id, testVersion, bucket_name, file_key)
+                    buildSecurityHubFindingsList(securityHubFindings,root, instanceId, item, region, aws_account_id, testVersion, bucket_name, file_key, scap_profile)
                 if(item.attrib.get("severity") == "high"):
                     high+=1
                 elif(item.attrib.get("severity") == "medium"):
@@ -173,9 +174,9 @@ def getIgnoreList():
         returnList.append(item['SCAP_Rule_Name'])
     return returnList
     
-def buildSecurityHubFindingsList(securityHubFindings, root, instanceId, item, region, aws_account_id, testVersion, bucket_name, file_key):
+def buildSecurityHubFindingsList(securityHubFindings, root, instanceId, item, region, aws_account_id, testVersion, bucket_name, file_key, scap_profile):
     rule = root.find(".//{http://checklists.nist.gov/xccdf/1.2}Rule[@id='" + item.attrib.get("idref") + "']")
-    profile = root.find('.//{http://checklists.nist.gov/xccdf/1.2}Profile[@id="xccdf_org.ssgproject.content_profile_stig-rhel7-disa"]')
+    profile = root.find(".//{http://checklists.nist.gov/xccdf/1.2}Profile[@id='" + scap_profile + "']")
 
     # fix the time format from OpenSCAP to Security Hub
     time = item.attrib.get("time")
