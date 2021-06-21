@@ -45,7 +45,7 @@ data "amazon-ami" "amazon_linux_2" {
 }
 
 source "amazon-ebs" "amzn2" {
-  ami_name        = "amzn2-ami-hvm-base-x86_64-gp2"
+  ami_name        = "amzn2-ami-hvm-base-x86_64-gp2-${formatdate("MMM-DD-YYYY-hh.mm.ss", timestamp())}"
   source_ami      = data.amazon-ami.amazon_linux_2.id
   ami_description = "AMZN Linux 2 hardened base"
 

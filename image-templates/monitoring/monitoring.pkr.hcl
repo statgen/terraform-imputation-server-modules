@@ -34,7 +34,7 @@ variable "vpc_id" {
 data "amazon-ami" "base_image" {
   filters = {
     virtualization-type = "hvm"
-    name                = "amzn2-ami-hvm-base-x86_64-gp2"
+    name                = "amzn2-ami-hvm-base-x86_64-gp2-*"
     root-device-type    = "ebs"
   }
   owners      = [var.ami_owner]
@@ -42,7 +42,7 @@ data "amazon-ami" "base_image" {
 }
 
 source "amazon-ebs" "monitoring" {
-  ami_name        = "monitoring-ami-hvm-x86_64-gp2"
+  ami_name        = "monitoring-ami-hvm-x86_64-gp2-${formatdate("MMM-DD-YYYY-hh.mm.ss", timestamp())}"
   source_ami      = data.amazon-ami.base_image.id
   ami_description = "Monitoring host image"
 
@@ -69,6 +69,5 @@ build {
 
   provisioner "ansible" {
     playbook_file = "playbook.yml"
-    galaxy_file   = "requirements.yml"
   }
 }
