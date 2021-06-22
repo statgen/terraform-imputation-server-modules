@@ -26,7 +26,20 @@ data "aws_iam_policy_document" "scap_bucket_access" {
     ]
 
     resources = [
-      "${aws_s3_bucket.this.arn}/*",
+      "${aws_s3_bucket.this.arn}/results/*",
+    ]
+  }
+
+  statement {
+    sid    = "SCAPBucketScriptAccessPolicy"
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.this.arn}/script/*",
     ]
   }
 

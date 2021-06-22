@@ -25,7 +25,8 @@ data "archive_file" "this" {
 }
 
 locals {
-  account_id = element(var.aws_account_id, 0)
+  account_id  = element(var.aws_account_id, 0)
+  scap_script = templatefile("functions/scapInit.sh", { scap_bucket_name = var.scap_bucket_name, scap_profile_name = var.scap_profile_name })
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -53,7 +54,7 @@ resource "aws_kms_alias" "this" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
-# CREATE SCAN RESULT BUCKET
+# CREATE SCAP S3 BUCKET
 # ---------------------------------------------------------------------------------------------------------------------
 
 resource "aws_s3_bucket" "this" {
@@ -78,6 +79,17 @@ resource "aws_s3_bucket" "this" {
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
+# CREATE SCAP init script
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_s3_bucket_object" "this" {
+  bucket     = aws_s3_bucket.this.id
+  key        = "script/${var.scap_script_name}"
+  content    = local.scap_script
+  kms_key_id = aws_kms_key.this.arn
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
 # CREATE S3 BUCKET NOTIFICATION
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -87,12 +99,12 @@ resource "aws_s3_bucket_notification" "this" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.this.arn
     events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = "results/"
     filter_suffix       = ".xml"
   }
 
   depends_on = [aws_lambda_permission.this]
 }
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE LAMBDA PERMISSION
@@ -119,9 +131,15 @@ resource "aws_lambda_function" "this" {
 
   source_code_hash = data.archive_file.this.output_base64sha256
 
-  runtime = "python3.8"
+  runtime     = "python3.8"
   memory_size = 1024
-  timeout = 360
+  timeout     = 360
+
+  environment {
+    variables = {
+      scap_profile_name = var.scap_profile_name
+    }
+  }
 
   tags = var.tags
 }
@@ -135,6 +153,30 @@ resource "aws_ssm_parameter" "this" {
   description = "Determines if Security Hub is used by the ProcessSCAPScanResults Lambda Function"
   type        = "String"
   value       = var.enable_security_hub_findings
+}
+
+# ---------------------------------------------------------------------------------------------------------------------
+# CREATE SSM ASSOCIATION 
+# ---------------------------------------------------------------------------------------------------------------------
+
+resource "aws_ssm_association" "this" {
+  association_name    = "SCAPRunCommandAssociation"
+  compliance_severity = "MEDIUM"
+  name                = "AWS-RunRemoteScript"
+  schedule_expression = "cron(0 0 12 1/1 * ? *)"
+
+  targets {
+    key    = "tag:RunSCAP"
+    values = ["True", "true"]
+  }
+
+  parameters = {
+    commandLine      = var.scap_script_name
+    executionTimeout = 3600
+    sourceType       = "S3"
+    sourceInfo       = "{\"path\":\"https://${var.scap_bucket_name}.s3.amazonaws.com/script/${var.scap_script_name}\"}"
+  }
+
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -294,25 +336,4 @@ resource "aws_iam_policy" "process_scap_scan_results_parameter_store" {
 resource "aws_iam_role_policy_attachment" "process_scap_scan_results_parameter_store" {
   role       = aws_iam_role.process_scap_scan_results.name
   policy_arn = aws_iam_policy.process_scap_scan_results_parameter_store.arn
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# CREATE SSM ASSOCIATION 
-# ---------------------------------------------------------------------------------------------------------------------
-
-resource "aws_ssm_association" "this" {
-  association_name    = "SCAPRunCommandAssociation"
-  compliance_severity = "MEDIUM"
-  name                = "AWS-RunShellScript"
-  schedule_expression = "cron(0 0 12 1/1 * ? *)"
-
-  targets {
-    key    = "tag:RunSCAP"
-    values = ["True", "true"]
-  }
-
-  parameters = {
-    commands = "yum install openscap-scanner scap-security-guide -y,if grep -q -i \"release 8\" /etc/redhat-release ; then,scriptFile=\"/usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml\",elif grep -q -i \"release 7\" /etc/redhat-release ; then,scriptFile=\"/usr/share/xml/scap/ssg/content/ssg-rhel7-ds.xml\",elif grep -q -i \"release 6\" /etc/redhat-release ; then,scriptFile=\"/usr/share/xml/scap/ssg/content/ssg-rhel6-ds.xml\",else,echo \"Running neither RHEL6.x, RHEL7.x or RHEL 8.x !\",fi,if [ \"$scriptFile\" ] ; then,sed -i 's/multi-check=\"true\"/multi-check=\"false\"/g' $scriptFile,oscap xccdf eval --fetch-remote-resources --profile xccdf_org.ssgproject.content_profile_stig --results-arf arf.xml --report report.html $scriptFile,fi,instanceId=$(curl http://169.254.169.254/latest/meta-data/instance-id),timestamp=$(date +%s),/usr/local/bin/aws s3 cp arf.xml s3://${aws_s3_bucket.this.id}/$instanceId/$timestamp-scap-results.xml,/usr/local/bin/aws s3 cp report.html s3://${aws_s3_bucket.this.id}/$instanceId/$timestamp-scap-results.html"
-  }
-
 }

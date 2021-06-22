@@ -46,6 +46,18 @@ variable "scap_bucket_name" {
   default     = null
 }
 
+variable "scap_profile_name" {
+  description = "The SCAP profile name that will be used in the Lambda function for parsing"
+  type        = string
+  default     = null
+}
+
+variable "scap_script_name" {
+  description = "Name of the script run by SSM to init SCAP"
+  type        = string
+  default     = "scapInit.sh"
+}
+
 variable "versioning_enabled" {
   description = "Whether AWS S3 should have versioning enabled on log buckets"
   type        = bool
