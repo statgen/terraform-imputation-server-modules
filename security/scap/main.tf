@@ -26,7 +26,7 @@ data "archive_file" "this" {
 
 locals {
   account_id  = element(var.aws_account_id, 0)
-  scap_script = templatefile("functions/scapInit.sh", { scap_bucket_name = var.scap_script_name })
+  scap_script = templatefile("functions/scapInit.sh", { scap_bucket_name = var.scap_bucket_name, scap_profile_name = var.scap_profile_name })
 }
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -99,12 +99,12 @@ resource "aws_s3_bucket_notification" "this" {
   lambda_function {
     lambda_function_arn = aws_lambda_function.this.arn
     events              = ["s3:ObjectCreated:*"]
+    filter_prefix       = "results/"
     filter_suffix       = ".xml"
   }
 
   depends_on = [aws_lambda_permission.this]
 }
-
 
 # ---------------------------------------------------------------------------------------------------------------------
 # CREATE LAMBDA PERMISSION

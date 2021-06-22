@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "scap_bucket_access" {
     ]
 
     resources = [
-      "${aws_s3_bucket.this.arn}/*",
+      "${aws_s3_bucket.this.arn}/results/*",
     ]
   }
 
@@ -39,7 +39,7 @@ data "aws_iam_policy_document" "scap_bucket_access" {
     ]
 
     resources = [
-      "${aws_s3_bucket.this.arn}/script*",
+      "${aws_s3_bucket.this.arn}/script/*",
     ]
   }
 
