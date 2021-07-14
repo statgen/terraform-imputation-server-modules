@@ -16,6 +16,18 @@ variable "aws_account_alias" {
   default     = null
 }
 
+variable "group_memberships" {
+  description = "Map of users and their group memberships"
+  type        = map(list(string))
+  default     = null
+}
+
+variable "user_names" {
+  description = "Map of users and their attributes"
+  type        = map(map(string))
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to module resources"
   type        = map(string)
