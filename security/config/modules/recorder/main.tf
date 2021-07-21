@@ -1,19 +1,4 @@
 # ---------------------------------------------------------------------------------------------------------------------
-# CREATE AWS CONFIG AGGREGATE AUTH
-# ---------------------------------------------------------------------------------------------------------------------
-
-/*
-data "aws_regions" "current" {}
-
-resource "aws_config_aggregate_authorization" "this" {
-  for_each = data.aws_regions.current.names
-
-  account_id = var.aws_account_id
-  region     = each.key
-}
-*/
-
-# ---------------------------------------------------------------------------------------------------------------------
 # CREATE AWS CONFIG RECORDER
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -34,7 +19,7 @@ resource "aws_config_configuration_recorder" "this" {
 }
 
 resource "aws_config_delivery_channel" "this" {
-  s3_bucket_name = aws_s3_bucket.this.bucket
+  s3_bucket_name = var.config_bucket_name
 
   depends_on = [aws_config_configuration_recorder.this]
 }
@@ -79,56 +64,4 @@ resource "aws_iam_policy" "aws_config_kms_access" {
   name        = "AWSConfigKMSAccessPolicy"
   description = "Policy to allow AWS Config access to KMS for S3 object encryption/decryption"
   policy      = data.aws_iam_policy_document.aws_config_kms_access.json
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# CREATE KMS KEY
-# ---------------------------------------------------------------------------------------------------------------------
-
-resource "aws_kms_key" "this" {
-  description             = "AWS Config bucket encryption key"
-  deletion_window_in_days = var.kms_deletion_window_in_days
-  enable_key_rotation     = var.kms_enable_key_rotation
-  is_enabled              = var.kms_is_enabled
-
-  tags = var.tags
-}
-
-resource "aws_kms_alias" "this" {
-  name          = "alias/${var.kms_alias}"
-  target_key_id = aws_kms_key.this.key_id
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
-# CREATE AWS CONFIG BUCKET
-# ---------------------------------------------------------------------------------------------------------------------
-
-resource "aws_s3_bucket" "this" {
-  bucket = var.config_bucket_name
-
-  acl = "private"
-
-  versioning {
-    enabled = var.versioning_enabled
-  }
-
-  server_side_encryption_configuration {
-    rule {
-      apply_server_side_encryption_by_default {
-        sse_algorithm     = "aws:kms"
-        kms_master_key_id = aws_kms_key.this.key_id
-      }
-    }
-  }
-
-  tags = var.tags
-}
-
-resource "aws_s3_bucket_public_access_block" "this" {
-  bucket = aws_s3_bucket.this.id
-
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
 }

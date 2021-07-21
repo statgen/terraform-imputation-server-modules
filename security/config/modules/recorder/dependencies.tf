@@ -22,8 +22,8 @@ data "aws_iam_policy_document" "aws_config_bucket_access" {
     ]
 
     resources = [
-      aws_s3_bucket.this.arn,
-      "${aws_s3_bucket.this.arn}/*"
+      "arn:aws:s3:::${var.config_bucket_name}",
+      "arn:aws:s3:::${var.config_bucket_name}/*"
     ]
   }
 
@@ -36,7 +36,7 @@ data "aws_iam_policy_document" "aws_config_bucket_access" {
     ]
 
     resources = [
-      aws_s3_bucket.this.arn
+      "arn:aws:s3:::${var.config_bucket_name}"
     ]
   }
 }
@@ -52,7 +52,7 @@ data "aws_iam_policy_document" "aws_config_kms_access" {
     ]
 
     resources = [
-      aws_kms_key.this.arn
+      var.config_bucket_kms_arn
     ]
   }
 }
