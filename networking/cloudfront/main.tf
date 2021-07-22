@@ -1,31 +1,3 @@
-# ---------------------------------------------------------------------------------------------------------------------
-# TERRAFORM STATE BLOCK
-# ---------------------------------------------------------------------------------------------------------------------
-
-terraform {
-  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
-  # https://www.terraform.io/docs/backends/config.html#partial-configuration
-  backend "s3" {}
-}
-
-provider "aws" {
-  # The AWS region in which all resources will be created
-  region = var.aws_region
-
-  # Only these AWS Account IDs may be operated on
-  allowed_account_ids = var.aws_account_id
-}
-
-data "aws_acm_certificate" "this" {
-  domain = var.sub_domain
-}
-
-data "archive_file" "this" {
-  type        = "zip"
-  source_file = "functions/index.js"
-  output_path = "functions/function.zip"
-}
-
 # ----------------------------------------------------------------------------------------------------------------------
 # CREATE IMPUTATION CLOUDFRONT DISTRIBUTION
 # ----------------------------------------------------------------------------------------------------------------------
@@ -56,8 +28,6 @@ resource "aws_cloudfront_distribution" "this" {
     bucket          = var.log_bucket
     prefix          = "cloudfront"
   }
-
-  // aliases = ["topmed.${var.sub_domain}"]
 
   default_cache_behavior {
     allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -122,21 +92,3 @@ resource "aws_lambda_function" "this" {
 
   tags = var.tags
 }
-
-# ----------------------------------------------------------------------------------------------------------------------
-# CREATE ROUTE53 RECORD FOR CLOUDFRONT
-# ----------------------------------------------------------------------------------------------------------------------
-
-// resource "aws_route53_record" "a" {
-//   depends_on = [aws_cloudfront_distribution.this]
-//   zone_id    = var.route53_zone_id
-//   name       = "topmed.${var.sub_domain}"
-
-//   type = "A"
-
-//   alias {
-//     name                   = aws_cloudfront_distribution.this.domain_name
-//     zone_id                = aws_cloudfront_distribution.this.hosted_zone_id
-//     evaluate_target_health = true
-//   }
-// }
