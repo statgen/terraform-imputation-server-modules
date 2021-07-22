@@ -1,15 +1,3 @@
-variable "aws_region" {
-  description = "The AWS region in which all resources will be created"
-  type        = string
-  default     = null
-}
-
-variable "aws_account_id" {
-  description = "The ID of the AWS account in which all resources will be created"
-  type        = list(string)
-  default     = null
-}
-
 variable "backend_port" {
   description = "The port to use to in the target group to connect with the target"
   type        = string

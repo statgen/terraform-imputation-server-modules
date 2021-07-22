@@ -1,23 +1,3 @@
-# ---------------------------------------------------------------------------------------------------------------------
-# TERRAFORM STATE BLOCK
-# ---------------------------------------------------------------------------------------------------------------------
-
-terraform {
-  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
-  # https://www.terraform.io/docs/backends/config.html#partial-configuration
-  backend "s3" {}
-}
-
-provider "archive" {}
-
-provider "aws" {
-  # The AWS region in which all resources will be created
-  region = var.aws_region
-
-  # Only these AWS Account IDs may be operated on
-  allowed_account_ids = var.aws_account_id
-}
-
 data "archive_file" "this" {
   type        = "zip"
   source_file = "functions/ProcessSCAPScanResults.py"

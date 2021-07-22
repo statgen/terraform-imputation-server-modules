@@ -1,13 +1,3 @@
-// output "route53_record_name" {
-//   description = "The name of the Route53 record"
-//   value       = aws_route53_record.a.name
-// }
-
-// output "route53_record_fqdn" {
-//   description = "The FQDN of the record"
-//   value       = aws_route53_record.a.fqdn
-// }
-
 output "security_headers_lambda_arn" {
   description = "The ARN of the Lambda Function to set security headers"
   value       = aws_lambda_function.this.arn

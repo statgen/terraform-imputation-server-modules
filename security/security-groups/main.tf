@@ -1,22 +1,4 @@
 # ---------------------------------------------------------------------------------------------------------------------
-# TERRAFORM STATE BLOCK
-# ---------------------------------------------------------------------------------------------------------------------
-
-terraform {
-  # The configuration for this backend will be filled in by Terragrunt or via a backend.hcl file. See
-  # https://www.terraform.io/docs/backends/config.html#partial-configuration
-  backend "s3" {}
-}
-
-provider "aws" {
-  # The AWS region in which all resources will be created
-  region = var.aws_region
-
-  # Only these AWS Account IDs may be operated on
-  allowed_account_ids = var.aws_account_id
-}
-
-# ---------------------------------------------------------------------------------------------------------------------
 # CREATE SECURITY GROUPS
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -124,21 +106,6 @@ resource "aws_security_group_rule" "monitoring_hosts_emr_master_prometheus_ingre
 
   security_group_id = aws_security_group.monitoring_hosts.id
 }
-
-# Duplicate when using CIDR blocks rather than security group IDs. Leaving in place for
-# future support of ref. security group ID across transit gateways
-# resource "aws_security_group_rule" "monitoring_hosts_emr_slave_prometheus_ingress" {
-#   type      = "ingress"
-#   from_port = "9090"
-#   to_port   = "9106"
-#   protocol  = "tcp"
-#   # source_security_group_id = aws_security_group.emr_slave.id
-#   cidr_blocks = var.app_vpc_private_subnets_cidr
-
-#   description = "Allow ingress Prometheus monitoring stats from EMR slave security group"
-
-#   security_group_id = aws_security_group.monitoring_hosts.id
-# }
 
 resource "aws_security_group_rule" "monitoring_hosts_all_egress" {
   type        = "egress"
