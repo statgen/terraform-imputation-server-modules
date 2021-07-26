@@ -38,6 +38,11 @@ jobs:
     - run: terraform fmt -check
       working-directory: ${{ matrix.paths }}
 
+    - name: terraform init
+      uses: hashicorp/setup-terraform@v1
+    - run: terraform init
+      working-directory: ${{ matrix.paths }}
+
     - name: terraform validate
       uses: hashicorp/setup-terraform@v1
     - run: terraform validate
