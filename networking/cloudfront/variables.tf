@@ -1,13 +1,7 @@
-variable "aws_region" {
-  description = "The AWS region in which all resources will be created"
-  type        = string
-  default     = null
-}
-
-variable "aws_account_id" {
-  description = "The ID of the AWS account in which all resources will be created"
-  type        = list(string)
-  default     = null
+variable "aliases" {
+  description = "Extra CNAMEs (alternate domain names), if any, for this distribution"
+  type        = set(string)
+  default     = [""]
 }
 
 variable "name_prefix" {
@@ -22,7 +16,13 @@ variable "sub_domain" {
   default     = null
 }
 
-variable "lb_dns_name" {
+variable "lb_dns_name_blue" {
+  description = "The DNS name of the loadbalancer to be used for the cloufront origin"
+  type        = string
+  default     = null
+}
+
+variable "lb_dns_name_green" {
   description = "The DNS name of the loadbalancer to be used for the cloufront origin"
   type        = string
   default     = null
@@ -44,6 +44,12 @@ variable "route53_zone_id" {
   description = "The route53 zone ID of the zone for the DNS record to be created in"
   type        = string
   default     = null
+}
+
+variable "traffic_distribution" {
+  description = "The ALB to direct production traffic to"
+  type        = string
+  default     = "blue"
 }
 
 variable "web_acl_id" {

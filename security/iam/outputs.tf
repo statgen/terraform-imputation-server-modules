@@ -1,18 +1,3 @@
-# output "full_access_group_id" {
-#   description = "The ID of the full-access group"
-#   value       = aws_iam_group.full_access.id
-# }
-
-# output "full_access_group_arn" {
-#   description = "The ARN of the full-access group"
-#   value       = aws_iam_group.full_access.arn
-# }
-
-# output "full_access_group_unique_id" {
-#   description = "The unique ID assigned to the full-access group by AWS"
-#   value       = aws_iam_group.full_access.unique_id
-# }
-
 output "bastion_host_role_arn" {
   description = "The ARN of the bastion host role"
   value       = aws_iam_role.bastion_host.arn
@@ -161,4 +146,18 @@ output "ec2_instance_profile_arn" {
 output "ec2_instance_profile_name" {
   description = "The name of the EC2 instance profile"
   value       = aws_iam_instance_profile.ec2.name
+}
+
+output "user_ids" {
+  value = {
+    for user_name in aws_iam_user.this :
+    user_name.name => user_name.unique_id
+  }
+}
+
+output "user_arns" {
+  value = {
+    for user_name in aws_iam_user.this :
+    user_name.name => user_name.arn
+  }
 }

@@ -26,7 +26,20 @@ data "aws_iam_policy_document" "scap_bucket_access" {
     ]
 
     resources = [
-      "${aws_s3_bucket.this.arn}/*",
+      "${aws_s3_bucket.this.arn}/results/*",
+    ]
+  }
+
+  statement {
+    sid    = "SCAPBucketScriptAccessPolicy"
+    effect = "Allow"
+
+    actions = [
+      "s3:GetObject",
+    ]
+
+    resources = [
+      "${aws_s3_bucket.this.arn}/script/*",
     ]
   }
 
@@ -39,7 +52,7 @@ data "aws_iam_policy_document" "scap_bucket_access" {
     ]
 
     resources = [
-      "${aws_kms_key.this.arn}",
+      aws_kms_key.this.arn,
     ]
   }
 }
@@ -101,7 +114,7 @@ data "aws_iam_policy_document" "process_scap_scan_results_s3_access" {
 
     actions = ["s3:Get*"]
 
-    resources = ["${aws_s3_bucket.this.arn}", "${aws_s3_bucket.this.arn}/*"]
+    resources = [aws_s3_bucket.this.arn, "${aws_s3_bucket.this.arn}/*"]
   }
 
   statement {
@@ -113,7 +126,7 @@ data "aws_iam_policy_document" "process_scap_scan_results_s3_access" {
     ]
 
     resources = [
-      "${aws_kms_key.this.arn}",
+      aws_kms_key.this.arn,
     ]
   }
 }

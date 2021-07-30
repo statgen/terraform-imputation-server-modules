@@ -2,169 +2,37 @@ name: 'Terraform'
 on: [push, pull_request]
 
 jobs:
-  terraform:
-    name: 'Terraform'
+  check-format:
+    strategy:
+      matrix:
+        paths: ['configuration',
+        'monitoring/cloudwatch',
+        'monitoring/prometheus',
+        'networking/cloudfront',
+        'networking/flowlogs',
+        'networking/route53',
+        'networking/transit-gateway',
+        'networking/vpc-app',
+        'networking/vpc-mgmt',
+        'notifications/ses',
+        'security/cloudtrail',
+        'security/config/modules/aggregator',
+        'security/config/modules/recorder',
+        'security/guardduty',
+        'security/iam',
+        'security/scap',
+        'security/security-groups',
+        'security/waf',
+        'services/imputation-server',
+        'storage/mysql',
+        'storage/s3']
+    name: Check Format
     runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@master
+    - name: checkout
+      uses: actions/checkout@v2
 
-      - name: 'Terraform Format - networking/cloudfront'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./networking/cloudfront"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - networking/route53'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./networking/route53"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - networking/flowlogs'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./networking/flowlogs"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - networking/vpc-app'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./networking/vpc-app"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - networking/vpc-mgmt'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./networking/vpc-mgmt"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - security/iam'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./security/iam"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - security/security-groups'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./security/security-groups"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - security/cloudtrail'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./security/cloudtrail"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - security/waf'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./security/waf"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - security/guardduty'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./security/guardduty"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - services/bastion-host'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./services/bastion-host"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - services/imputation-lb'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./services/imputation-lb"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - services/imputation-server'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./services/imputation-server"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - services/terraform-state'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./services/terraform-state"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - storage/mysql'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./storage/mysql"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Terraform Format - storage/s3'
-        uses: hashicorp/terraform-github-actions@master
-        with:
-          tf_actions_version: 0.12.13
-          tf_actions_subcommand: 'fmt'
-          tf_actions_working_dir: "./storage/s3"
-          tf_actions_comment: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: terraform fmt
+      uses: hashicorp/setup-terraform@v1
+    - run: terraform fmt -check
+      working-directory: ${{ matrix.paths }}
