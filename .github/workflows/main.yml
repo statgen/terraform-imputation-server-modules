@@ -23,7 +23,6 @@ jobs:
         'security/scap',
         'security/security-groups',
         'security/waf',
-        'services/imputation-lb',
         'services/imputation-server',
         'storage/mysql',
         'storage/s3']
