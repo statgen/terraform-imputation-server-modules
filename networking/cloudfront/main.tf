@@ -3,12 +3,17 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
 locals {
-  origin_id = "${var.name_prefix}-cloudfront-origin"
+  origin_id   = "${var.name_prefix}-cloudfront-origin"
+  domain_name = var.traffic_distribution == "blue" ? var.lb_dns_name_blue : var.lb_dns_name_green
+}
+
+data "aws_acm_certificate" "this" {
+  domain = var.sub_domain
 }
 
 resource "aws_cloudfront_distribution" "this" {
   origin {
-    domain_name = var.lb_dns_name
+    domain_name = local.domain_name
     origin_id   = local.origin_id
 
     custom_origin_config {
@@ -22,6 +27,8 @@ resource "aws_cloudfront_distribution" "this" {
   enabled             = true
   is_ipv6_enabled     = false
   default_root_object = "index.html"
+
+  aliases = var.aliases
 
   logging_config {
     include_cookies = false

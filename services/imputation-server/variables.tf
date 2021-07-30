@@ -1,7 +1,7 @@
 # Global 
 
 variable "name_prefix" {
-  description = "A name prefix used in resource names to ensure uniqueness accross acounts"
+  description = "A name prefix used in resource names to ensure uniqueness across accounts"
   type        = string
   default     = null
 }
@@ -18,6 +18,30 @@ variable "enable_blue_application" {
   default     = false
 }
 
+variable "traffic_distribution" {
+  description = "Levels of traffic distribution"
+  type        = string
+  default     = "blue"
+}
+
+variable "lb_security_group" {
+  description = "Security group for ALB"
+  type        = string
+  default     = null
+}
+
+variable "lb_subnets" {
+  description = "The subnet where the ALB will be deployed"
+  type        = list(string)
+  default     = null
+}
+
+variable "domain" {
+  description = "The FQDN of the domain to which the ALB listener certificate is attached"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to module resources"
   type        = map(string)
@@ -27,6 +51,12 @@ variable "tags" {
 }
 
 # Blue environment
+variable "backend_port_blue" {
+  description = "The port to use in the target group to connect with the target"
+  type        = string
+  default     = 8082
+}
+
 variable "custom_ami_id_blue" {
   description = "A custom AMI for the EMR cluster"
   type        = string
@@ -184,6 +214,12 @@ variable "task_instance_type_blue" {
 }
 
 # Green environment
+variable "backend_port_green" {
+  description = "The port to use in the target group to connect with the target"
+  type        = string
+  default     = 8082
+}
+
 variable "custom_ami_id_green" {
   description = "A custom AMI for the EMR cluster"
   type        = string

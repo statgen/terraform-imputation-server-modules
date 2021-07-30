@@ -1,3 +1,8 @@
+output "traffic_distribution" {
+  description = "The ALB to direct production traffic to"
+  value       = var.traffic_distribution
+}
+
 # Blue environment 
 output "master_node_id_blue" {
   description = "EMR master node ID"
@@ -99,6 +104,16 @@ output "emr_instance_group_name_blue" {
   value       = var.enable_blue_application ? module.imputation_server_blue[0].emr_instance_group_name : ""
 }
 
+output "lb_dns_name_blue" {
+  description = "The DNS name of the ALB"
+  value       = var.enable_blue_application ? aws_lb.blue[0].dns_name : ""
+}
+
+output "lb_name_blue" {
+  description = "The name of the ALB"
+  value       = var.enable_blue_application ? aws_lb.blue[0].name : ""
+}
+
 # Green environment
 output "master_node_id_green" {
   description = "EMR master node ID"
@@ -198,4 +213,14 @@ output "emr_instance_group_running_instance_count_green" {
 output "emr_instance_group_name_green" {
   description = "The name of the Instance Group"
   value       = var.enable_green_application ? module.imputation_server_green[0].emr_instance_group_name : ""
+}
+
+output "lb_dns_name_green" {
+  description = "The DNS name of the ALB"
+  value       = var.enable_green_application ? aws_lb.green[0].dns_name : ""
+}
+
+output "lb_name_green" {
+  description = "The name of the ALB"
+  value       = var.enable_green_application ? aws_lb.green[0].name : ""
 }
